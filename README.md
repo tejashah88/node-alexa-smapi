@@ -7,6 +7,7 @@ As of now, this module is **mostly untested**, so there are any problems, please
 ## Table Of Contents
 
 * [Documentation](#documentation)
+  * [Constructor](#constructor)
   * [Constants](#constants)
   * [Skill Operations](#skill-operations)
   * [Interaction Model Operations](#interaction-model-operations)
@@ -26,9 +27,15 @@ Official Documentation: https://developer.amazon.com/docs/smapi/ask-cli-intro.ht
 
 All methods return a promise, which either resolves to the data received, or rejects with an error.
 
+### Constructor
+```javascript
+// Constructor for building the SMAPI REST client. If a base URL isn't specified, the North American base url is used.
+Object alexaSMAPI(String token, optional String baseUrl)
+```
+
 ### Constants
 ```javascript
-// All possible base URLs. By default, the North American url is used.
+// All possible base URLs. By default, the North American base url is used.
 String alexaSMAPI.BASE_URL_NA = "https://api.amazonalexa.com/v0/"
 String alexaSMAPI.BASE_URL_EU = "https://api.eu.amazonalexa.com/v0/"
 ```
@@ -49,8 +56,9 @@ Promise<Void> alexaSMAPI.skills.update(String skillId, Object skillManifest)
 // Retrieves the current statuc of the skill
 Promise<Object> alexaSMAPI.skills.status(String skillId)
 
-// List the skills for a specified vendorId, which is a mandatory parameter. The optional maxResults and nextToken values provide paging for the results.
-Promise<Object> alexaSMAPI.skills.list(String vendorId, Integer maxResults, String nextToken)
+// List the skills for a specified vendorId, which is a mandatory parameter.
+// The optional maxResults and nextToken values provide paging for the results.
+Promise<Object> alexaSMAPI.skills.list(String vendorId, optional Integer maxResults, optional String nextToken)
 
 // Deletes a skill by its skill ID.
 Promise<Void> alexaSMAPI.skills.delete(String skillId)
@@ -107,7 +115,7 @@ Promise<Void> alexaSMAPI.skillCertification.submit(String skillId)
 // * NOT_RECEIVED_CERTIFICATION_FEEDBACK
 // * NOT_INTEND_TO_PUBLISH
 // * OTHER
-Promise<Void> alexaSMAPI.skillCertification.withdraw(String skillId, Enum<String> reason, String message)
+Promise<Void> alexaSMAPI.skillCertification.withdraw(String skillId, String reason, String message)
 ```
 
 ### Skill Testing Operations
@@ -153,13 +161,11 @@ Promise<Any> alexaSMAPI.custom.put(String url, Object parameters)
 Promise<Any> alexaSMAPI.custom.delete(String url)
 ```
 
-
 ## Examples
 ### Using Promises (normal functions)
 ```javascript
-// serverLocation can be 'us' or 'cn'
-var wioClient = require('node-wio-link')(serverLocation)
-wioClient.node.read(nodeToken, 'GroveAirqualityA0', 'quality')
+var smapiClient = require('node-alexa-smapi')(authToken)
+smapiClient.skills.getManifest(skillId)
   .then(function(data) {
     console.log(data)
   })
@@ -170,22 +176,20 @@ wioClient.node.read(nodeToken, 'GroveAirqualityA0', 'quality')
 
 ### Using Promises (arrow functions)
 ```javascript
-// serverLocation can be 'us' or 'cn'
-var wioClient = require('node-wio-link')(serverLocation)
-wioClient.node.read(nodeToken, 'GroveAirqualityA0', 'quality')
+var smapiClient = require('node-alexa-smapi')(authToken)
+smapiClient.skills.getManifest(skillId)
   .then(data => console.log(data))
   .catch(error => console.log(error));
 ```
 
 ### Using Async/Await
 ```javascript
-// serverLocation can be 'us' or 'cn'
-var wioClient = require('node-wio-link')(serverLocation)
+var smapiClient = require('node-alexa-smapi')(authToken)
 
 (async function() {
   try {
-    var airQuality = await wioClient.node.read(nodeToken, 'GroveAirqualityA0', 'quality');
-    console.log(airQuality);
+    var manifest = await smapiClient.skills.getManifest(skillId)
+    console.log(manifest);
   } catch (error) {
     console.log(error);
   }
