@@ -29,13 +29,13 @@ All methods return a promise, which either resolves to the data received, or rej
 
 ### Constructor
 ```javascript
-// Constructor for building the SMAPI REST client. If a base URL isn't specified, the North American base url is used.
+// Constructor for building the SMAPI REST client. If a base URL isn't specified, the NA url is used.
 Object alexaSMAPI(String token, optional String baseUrl)
 ```
 
 ### Constants
 ```javascript
-// All possible base URLs. By default, the North American base url is used.
+// All possible base URLs. By default, the NA url is used.
 String alexaSMAPI.BASE_URL_NA = "https://api.amazonalexa.com/v0/"
 String alexaSMAPI.BASE_URL_EU = "https://api.eu.amazonalexa.com/v0/"
 ```
