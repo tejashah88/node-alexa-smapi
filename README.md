@@ -2,7 +2,7 @@
 A node.js client library for using the Alexa Skill Management API.
 
 # Notice
-As of now, this module is **mostly untested**, so there are any problems, please create a new issue or a pull request to fix the issue.
+As of now, this module is **mostly untested**, so if there are any problems, please create a new issue or a pull request to fix the issue.
 
 ## Table Of Contents
 
