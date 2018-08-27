@@ -89,13 +89,13 @@ function alexaSMAPI(token, baseUrl) {
 
   smapi.skillCertification = {
     submit: skillId => rest.post(`/skills/${skillId}/submit`),
-    withdraw: (skillId, reason, message) => rest.post(`/skills/{skillId}/withdraw`, { reason, message })
+    withdraw: (skillId, reason, message) => rest.post(`/skills/${skillId}/withdraw`, { reason, message })
   };
 
   smapi.skillTesting = {
     invoke: (skillId, endpointRegion, skillRequest) => rest.post(`/skills/${skillId}/invocations`, { endpointRegion, skillRequest }),
-    simulate: (skillId, content, locale) => rest.post(`skills/${skillId}/simulations`, { input: { content }, device: { locale } }),
-    simulationStatus: (skillId, requestId) => rest.get(`skills/${skillId}/simulations/${requestId}`)
+    simulate: (skillId, content, locale) => rest.post(`/skills/${skillId}/simulations`, { input: { content }, device: { locale } }),
+    simulationStatus: (skillId, requestId) => rest.get(`/skills/${skillId}/simulations/${requestId}`)
   };
 
   smapi.custom = {
