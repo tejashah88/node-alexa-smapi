@@ -1,0 +1,40 @@
+{
+ "manifest": {
+  "publishingInformation": {
+   "locales": {
+    "en-US": {
+     "summary": "skill to test node-alexa-smapi",
+     "examplePhrases": [
+      "Alexa open test smapi"
+     ],
+     "keywords": [],
+     "name": "SMAPI test skill",
+     "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/8c00/a93adb7ab2b940bcbf546979498707bc/APP_ICON?versionId=8Nc4buGfCIxfX8oDt9mf_T.H7O6y9tjb&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535601732&Signature=VWrSeaN9FdnLGGdn2ZajhYVIVlQ%3D",
+     "description": "skill to test node-alexa-smapi",
+     "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/6a5e/828d0ea49abf417a930c2074262c42f3/APP_ICON_LARGE?versionId=dnxT6kitJQmtYmRqlSJ0SmG7AVMyxC.y&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535601732&Signature=VIKxtc%2FvpTo1cu1hhUjY%2FY5KPt4%3D"
+    }
+   },
+   "isAvailableWorldwide": true,
+   "testingInstructions": "this is a dummy skill just used to test node-alexa-smapi",
+   "category": "NOVELTY",
+   "distributionCountries": []
+  },
+  "apis": {
+   "custom": {
+    "endpoint": {
+     "sslCertificateType": "Wildcard",
+     "uri": "https://www.example.com"
+    },
+    "interfaces": []
+   }
+  },
+  "manifestVersion": "1.0",
+  "privacyAndCompliance": {
+   "allowsPurchases": false,
+   "isExportCompliant": true,
+   "containsAds": false,
+   "isChildDirected": false,
+   "usesPersonalInfo": false
+  }
+ }
+}
