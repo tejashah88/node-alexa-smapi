@@ -4,7 +4,9 @@
   "description": "A node.js client library for using the Alexa Skill Management API.",
   "main": "index.js",
   "scripts": {
-    "test": "nyc mocha"
+    "lint": "eslint .",
+    "test": "mocha",
+    "test-with-coverage": "nyc mocha"
   },
   "repository": {
     "type": "git",

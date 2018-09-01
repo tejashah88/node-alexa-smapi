@@ -2,32 +2,12 @@
 'use strict';
 
 /*
- * This test suite will perform the following actions:
- * - retrieve a valid access_token and store it for all SMAPI invocations
- * - list all vendors and use the first vendor (account) in the list to create a test skill
- * - invoke all SMAPI operations against this test skill
- * - remove the test skill after all SMAPI testing is complete
- * - if a test suite fails, it may be up to you to manually clean up the test skill created during the failed test suite
- */
-
-/*
- * Test suite requirements:
- * - obtaining refreshToken, clientId, and clientSecret
- *   - follow these instructions: https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#util-command
- *   - run ask util generate-lwa-tokens and copy the value from refresh_token and use it to initialize refreshToken
- * - create and populate test/data/secrets.json with the following information:
- *   - refreshToken
- *   - clientId
- *   - clientSecret
- */
-
-/*
  * Configurable test suite parameters
  */
-const LOG_RESPONSES = false;
-const MAX_RETRIES = 10;
-const RETRY_TIMEOUT = 10000; // in miliseconds
-const MOCHA_TIMEOUT = 10000; // in miliseconds
+const LOG_RESPONSES = false; // if true will output (console.log) the response received by each SMAPI operation
+const MAX_RETRIES = 10; // number of times the test suite will check for completion of create/update operations before proceeding with other test cases
+const RETRY_TIMEOUT = 10000; // time (in milliseconds) to wait before checking again for completion of create/update operations
+const MOCHA_TIMEOUT = 10000; // for details see https://mochajs.org/#timeouts
 
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');

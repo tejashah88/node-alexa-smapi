@@ -9,9 +9,9 @@
      ],
      "keywords": [],
      "name": "SMAPI test skill",
-     "smallIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/8c00/a93adb7ab2b940bcbf546979498707bc/APP_ICON?versionId=8Nc4buGfCIxfX8oDt9mf_T.H7O6y9tjb&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535582782&Signature=pqr4G9XOlJuk5lA43k4xsBVasRo%3D",
+     "smallIconUri": "https://s3.amazonaws.com/node-alexa-smapi/icons/icon_108_A2Z.png",
      "description": "skill to test node-alexa-smapi",
-     "largeIconUri": "https://s3.amazonaws.com/CAPS-SSE/echo_developer/6a5e/828d0ea49abf417a930c2074262c42f3/APP_ICON_LARGE?versionId=dnxT6kitJQmtYmRqlSJ0SmG7AVMyxC.y&AWSAccessKeyId=AKIAIEYXX6DHY7O4XWMA&Expires=1535582782&Signature=H8U5eXzDDVifpo%2BuIxXSJOUBCP4%3D"
+     "largeIconUri": "https://s3.amazonaws.com/node-alexa-smapi/icons/icon_512_A2Z.png"
     }
    },
    "isAvailableWorldwide": true,

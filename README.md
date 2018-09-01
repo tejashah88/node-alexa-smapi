@@ -2,17 +2,19 @@
 A node.js client library for using the Alexa Skill Management API.
 
 # Notice
-As of now, this module is **mostly untested**, so if there are any problems, please create a new issue or a pull request to fix the issue.
+As of now, the following SMAPI operations in this module are **untested**: skill certification, skill enablement, skill testing (validation, invocation, simulation), and intent request history. So if there are any problems, please create a new issue or a pull request to fix the issue. Additionally you can help improve this library's stability by adding tests for yet untested SMAPI operations.
 
 ## Table Of Contents
 
 * [Documentation](#documentation)
   * [Constructor](#constructor)
   * [Constants](#constants)
+	* [Access Tokens](#access-tokens)
   * [Skill Operations](#skill-operations)
   * [Interaction Model Operations](#interaction-model-operations)
   * [Account Linking Operations](#account-linking-operations)
   * [Vendor Operations](#vendor-operations)
+	* [Skill Enablement Operations](#skill-enablement-operations)
   * [Skill Certification Operations](#skill-certification-operations)
   * [Skill Testing Operations](#skill-testing-operations)
   * [Miscellaneous Functions](#miscellaneous-functions)
@@ -25,19 +27,35 @@ As of now, this module is **mostly untested**, so if there are any problems, ple
 ## Documentation
 Official Documentation: https://developer.amazon.com/docs/smapi/ask-cli-intro.html#smapi-intro
 
-All methods return a promise, which either resolves to the data received, or rejects with an error.
+All methods return a promise, which either resolves to the SMAPI data received, or rejects with an error.
 
 ### Constructor
 ```javascript
-// Constructor for building the SMAPI REST client. If a base URL isn't specified, the NA url is used.
-Object alexaSMAPI(String token, optional String baseUrl)
+// Constructor for building the SMAPI REST client. params should be in the form: {version: "v0, or v1 (default)", region: "NA (default), EU, or FE"}.
+Object alexaSmapi(optional Object params)
 ```
 
 ### Constants
 ```javascript
 // All possible base URLs. By default, the NA url is used.
-String alexaSMAPI.BASE_URL_NA = "https://api.amazonalexa.com/v0/"
-String alexaSMAPI.BASE_URL_EU = "https://api.eu.amazonalexa.com/v0/"
+const BASE_URLS = {
+  NA: 'https://api.amazonalexa.com',
+  EU: 'https://api.eu.amazonalexa.com',
+  FE: 'https://api.fe.amazonalexa.com'
+};
+```
+
+### Access Tokens
+This module includes operation to retrieve a SMAPI compliant (Login with Amazon) access token. Immediately after instantiation invoke alexaSmapi.tokens.refresh(params) to seed the (Authorization header) access token for all future operations.
+```javascript
+// Constructor for building the SMAPI REST client. params should be in the form: {version: "v0, or v1 (default)", region: "NA (default), EU, or FE"}.
+const alexaSmapi = require('node-alexa-smapi');
+var smapiClient = alexaSmapi(optional Object params);
+smapiClient.tokens.refresh({
+	refreshToken: "MY_REFRESH_TOKEN",
+	clientId: "MY_CLIENT_ID",
+	clientSecret: "MY_CLIENT_SECRET"
+});
 ```
 
 ### Skill Operations
@@ -45,23 +63,23 @@ Official Documentation: https://developer.amazon.com/docs/smapi/skill-operations
 
 ```javascript
 // Fetches the skill manifest associated with the skill ID.
-Promise<Object> alexaSMAPI.skills.getManifest(String skillId)
+Object alexaSmapi.skills.getManifest(String skillId, String stage)
 
 // Creates a new skill associated with the vendor ID.
-Promise<Object> alexaSMAPI.skills.create(String vendorId, Object skillManifest)
+Object alexaSmapi.skills.create(String vendorId, Object skillManifest)
 
 // Updates a skill's manifest with the specified skill ID.
-Promise<Void> alexaSMAPI.skills.update(String skillId, Object skillManifest)
+alexaSmapi.skills.update(String skillId, String stage, Object skillManifest)
 
 // Retrieves the current statuc of the skill
-Promise<Object> alexaSMAPI.skills.status(String skillId)
+Object alexaSmapi.skills.status(String skillId)
 
 // List the skills for a specified vendorId, which is a mandatory parameter.
 // The optional maxResults and nextToken values provide paging for the results.
-Promise<Object> alexaSMAPI.skills.list(String vendorId, optional Integer maxResults, optional String nextToken)
+Object alexaSmapi.skills.list(String vendorId, optional Integer maxResults, optional String nextToken)
 
 // Deletes a skill by its skill ID.
-Promise<Void> alexaSMAPI.skills.delete(String skillId)
+alexaSmapi.skills.delete(String skillId)
 ```
 
 ### Interaction Model Operations
@@ -69,16 +87,16 @@ Official Documentation: https://developer.amazon.com/docs/smapi/interaction-mode
 
 ```javascript
 // Retrieves the interaction model for a specified skill.
-Promise<Object> alexaSMAPI.interactionModel.get(String skillId, String locale)
+Object alexaSmapi.interactionModel.get(String skillId, String stage, String locale)
 
 // Retrieves the Etag for a specified skill.
-Promise<String> alexaSMAPI.interactionModel.getEtag(String skillId, String locale)
+String alexaSmapi.interactionModel.getEtag(String skillId, String stage, String locale)
 
 // Updates the interaction model for a specified skill.
-Promise<Object> alexaSMAPI.interactionModel.update(String skillId, String locale, Object interactionModel)
+Object alexaSmapi.interactionModel.update(String skillId, String stage, String locale, Object interactionModel)
 
 // Retrieves the building status of the interaction model.
-Promise<Object> alexaSMAPI.interactionModel.getStatus(String skillId, String locale)
+Object alexaSmapi.interactionModel.getStatus(String skillId, String stage, String locale)
 ```
 
 ### Account Linking Operations
@@ -86,18 +104,35 @@ Official Documentation: https://developer.amazon.com/docs/smapi/account-linking-
 
 ```javascript
 // Updates the account linking details
-Promise<Void> alexaSMAPI.accountLinking.update(String skillId, Object accountLinkingRequest)
+alexaSmapi.accountLinking.update(String skillId, String stage, Object accountLinkingRequest)
 
 // Retrieves the account linking details
-Promise<Object> alexaSMAPI.accountLinking.readInfo(String skillId)
+Object alexaSmapi.accountLinking.readInfo(String skillId, String stage)
+
+// Deletes the account linking details
+alexaSmapi.accountLinking.delete(String skillId, String stage)
 ```
 
 ### Vendor Operations
 Official Documentation: https://developer.amazon.com/docs/smapi/vendor-operations.html
 
 ```javascript
-// List all of the vendors associated with a user.
-Promise<Array> alexaSMAPI.vendors.list(String userToken)
+// List all of the vendors associated with a user (access token).
+Array alexaSmapi.vendors.list()
+```
+
+### Skill Enablement Operations
+Official Documentation: https://developer.amazon.com/docs/smapi/skill-enablement.html
+
+```javascript
+// Enables a skill stage for the requestor. The requestor should be either a developer or the owner of the skill. Please note that only one skill stage can be enabled for a given user at one time.
+alexaSmapi.skillEnablement.enable(String skillId, String stage)
+
+// Checks whether a skill stage is enabled or not for the requestor.
+alexaSmapi.skillEnablement.status(String skillId, String stage)
+
+// Disables a skill by deleting the skill enablement.
+alexaSmapi.skillEnablement.disable(String skillId, String stage)
 ```
 
 ### Skill Certification Operations
@@ -105,7 +140,7 @@ Official Documentation: https://developer.amazon.com/docs/smapi/skill-certificat
 
 ```javascript
 // Submit a skill for certification for potential publication.
-Promise<Void> alexaSMAPI.skillCertification.submit(String skillId)
+alexaSmapi.skillCertification.submit(String skillId)
 
 // Withdraw a skill from the certification process.
 // Possible enumeration values for 'reason'
@@ -115,7 +150,7 @@ Promise<Void> alexaSMAPI.skillCertification.submit(String skillId)
 // * NOT_RECEIVED_CERTIFICATION_FEEDBACK
 // * NOT_INTEND_TO_PUBLISH
 // * OTHER
-Promise<Void> alexaSMAPI.skillCertification.withdraw(String skillId, String reason, String message)
+alexaSmapi.skillCertification.withdraw(String skillId, String reason, String message)
 ```
 
 ### Skill Testing Operations
@@ -123,49 +158,55 @@ Official Documentation: https://developer.amazon.com/docs/smapi/skill-testing-op
 
 ```javascript
 // Used for directly testing a skill by passing the skill request object directly.
-Promise<Object> alexaSMAPI.skillTesting.invoke(String skillId, String endpointRegion, Object skillRequest)
+Object alexaSmapi.skillTesting.validate(String skillId, String stage, [String] locales)
+
+// Used for directly testing a skill by passing the skill request object directly.
+Object alexaSmapi.skillTesting.validationStatus(String skillId, String stage, String validationId)
+
+// Used for directly testing a skill by passing the skill request object directly.
+Object alexaSmapi.skillTesting.invoke(String skillId, String endpointRegion, Object skillRequest)
 
 // Simulates a skill execution.
-Promise<Object> alexaSMAPI.skillTesting.simulate(String skillId, String content, String locale)
+Object alexaSmapi.skillTesting.simulate(String skillId, String content, String locale)
 
 // Retrieves the status of the simulated skill execution.
-Promise<Object> alexaSMAPI.skillTesting.simulationStatus(String skillId, String requestId)
+Object alexaSmapi.skillTesting.simulationStatus(String skillId, String requestId)
 ```
 
 ### Miscellaneous Functions
 ```javascript
-// Refeshes the authorization token.
-Void alexaSMAPI.refreshToken(String token)
+// Refeshes the authorization token with the access token provided.
+alexaSmapi.refreshToken(String accessToken)
 
 // Sets the new base URL for future API calls.
-Void alexaSMAPI.setBaseUrl(String url)
+alexaSmapi.setBaseUrl(String url)
 ```
 
 ### Custom API calls
-Due to its recent release to the public, some API methods may not be covered by this module. In that case, a bunch of custom functions are available to use.
+Due to its recent release to the public, some API methods may not be covered by this module. In that case, a bunch of custom functions are available to use. They will return the response received from making the call.
 
 ```javascript
 // Perform a custom HEAD request
-Promise<Any> alexaSMAPI.custom.head(String url)
+alexaSmapi.custom.head(String url)
 
 // Perform a custom GET request
-Promise<Any> alexaSMAPI.custom.get(String url, Object parameters)
+alexaSmapi.custom.get(String url, Object parameters)
 
 // Perform a custom POST request
-Promise<Any> alexaSMAPI.custom.post(String url, Object parameters)
+alexaSmapi.custom.post(String url, Object parameters)
 
 // Perform a custom PUT request
-Promise<Any> alexaSMAPI.custom.put(String url, Object parameters)
+alexaSmapi.custom.put(String url, Object parameters)
 
 // Perform a custom DELETE request
-Promise<Any> alexaSMAPI.custom.delete(String url)
+alexaSmapi.custom.delete(String url)
 ```
 
 ## Examples
 ### Using Promises (normal functions)
 ```javascript
-var smapiClient = require('node-alexa-smapi')(authToken)
-smapiClient.skills.getManifest(skillId)
+const smapiClient = require('node-alexa-smapi')()
+smapiClient.skills.getManifest(skillId, 'development')
   .then(function(data) {
     console.log(data)
   })
@@ -176,19 +217,19 @@ smapiClient.skills.getManifest(skillId)
 
 ### Using Promises (arrow functions)
 ```javascript
-var smapiClient = require('node-alexa-smapi')(authToken)
-smapiClient.skills.getManifest(skillId)
+const smapiClient = require('node-alexa-smapi')()
+smapiClient.skills.getManifest(skillId, 'development')
   .then(data => console.log(data))
   .catch(error => console.log(error));
 ```
 
 ### Using Async/Await
 ```javascript
-var smapiClient = require('node-alexa-smapi')(authToken)
+const smapiClient = require('node-alexa-smapi')()
 
 (async function() {
   try {
-    var manifest = await smapiClient.skills.getManifest(skillId)
+    let manifest = await smapiClient.skills.getManifest(skillId, 'development')
     console.log(manifest);
   } catch (error) {
     console.log(error);

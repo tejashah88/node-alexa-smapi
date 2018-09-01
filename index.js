@@ -1,5 +1,4 @@
 /* eslint-env node */
-// For more information check: https://developer.amazon.com/docs/smapi/ask-cli-intro.html#smapi-intro
 'use strict';
 
 var axios = require('axios');
@@ -17,9 +16,7 @@ const SUPPORTED_VERSIONS = [VERSION_0, VERSION_1];
 const DEFAULT_VERSION = SUPPORTED_VERSIONS[SUPPORTED_VERSIONS.length - 1];
 
 function alexaSMAPI(params) {
-  //if (params.token && (typeof params.token !== 'string' || params.token.length === 0))
-  //  throw new Error('Invalid token specified!');
-
+  params = params !== undefined ? params : {};
   const version = SUPPORTED_VERSIONS.includes(params.version) ? params.version : DEFAULT_VERSION;
   var smapi = { BASE_URLS, version };
 
@@ -27,7 +24,6 @@ function alexaSMAPI(params) {
     client: axios.create({
       baseURL: BASE_URLS[params.region in BASE_URLS ? params.region : DEFAULT_GEO_REGION],
       headers: {
-        //'Authorization': params.token,
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       }
@@ -63,29 +59,17 @@ function alexaSMAPI(params) {
     if (typeof token !== 'string' || token.length === 0)
       throw new Error('Invalid token specified!');
     else
-      //rest.client.defaults.headers.common['Authorization'] = token; // not working
-      axios.defaults.headers.common['Authorization'] = token;
+      axios.defaults.headers.common['Authorization'] = token; // go back to rest.client... over axios... once can figure out why it was not working
   };
 
   smapi.setBaseUrl = (url) => {
     if (typeof url !== 'string' || url.length === 0)
       throw new Error('Invalid base url specified!');
     else
-      rest.client.defaults.baseURL = url;
+      axios.defaults.baseURL = url; // go back to rest.client... over axios... once can figure out why it was not working
   };
 
   smapi.tokens = {
-    authorize: () => {
-      // retrieve initial refresh_token with an auth request:
-      // --- Option 1 --- use ask util generate-lwa-tokens (for more information see: https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#util-command)
-      // --- Option 2 --- use Postman to do something like:
-      // grant type: autorization code
-      // Callback URL: http://127.0.0.1:9090/cb (should be configured in https://developer.amazon.com/iba-sp/overview.html)
-      // Auth URL: https://www.amazon.com/ap/oa
-      // Access Token URL: https://api.amazon.com/auth/o2/token
-      // Scope: alexa::ask:skills:readwrite alexa::ask:models:readwrite alexa::ask:skills:test (for more info see: https://developer.amazon.com/docs/smapi/ask-cli-intro.html)
-      // Client Authentication: Send client credentials in body
-    },
     refresh: (params) => {
       return axios({
         baseURL: 'https://api.amazon.com',
@@ -201,17 +185,14 @@ function alexaSMAPI(params) {
     disable: (skillId, stage) => rest.delete(`/v1/skills/${skillId}/stages/${stage}/enablement`)
   };
 
-  smapi.skillValidation = {
-    execute: (skillId, stage, locales) => rest.post(`/v1/skills/${skillId}/stages/${stage}/validations`, { locales }),
-    status: (skillId, stage, validationId) => rest.get(`/v1/skills/${skillId}/stages/${stage}/validations/${validationId}`)
-  };
-
   smapi.skillCertification = {
     submit: skillId => rest.post(`/${smapi.version}/skills/${skillId}/submit`),
     withdraw: (skillId, reason, message) => rest.post(`/${smapi.version}/skills/${skillId}/withdraw`, { reason, message })
   };
 
   smapi.skillTesting = {
+    validate: (skillId, stage, locales) => rest.post(`/v1/skills/${skillId}/stages/${stage}/validations`, { locales }),
+    validationStatus: (skillId, stage, validationId) => rest.get(`/v1/skills/${skillId}/stages/${stage}/validations/${validationId}`),
     invoke: (skillId, endpointRegion, skillRequest) => rest.post(`/${smapi.version}/skills/${skillId}/invocations`, { endpointRegion, skillRequest }),
     simulate: (skillId, content, locale) => rest.post(`/${smapi.version}/skills/${skillId}/simulations`, { input: { content }, device: { locale } }),
     simulationStatus: (skillId, requestId) => rest.get(`/${smapi.version}/skills/${skillId}/simulations/${requestId}`)
