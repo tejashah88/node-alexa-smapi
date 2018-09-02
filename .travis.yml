@@ -1,3 +1,8 @@
+# Add the following envirnment sensitive variables to Travis CI:
+# - REFRESH_TOKEN
+# - CLIENT_ID
+# - CLIENT_SECRET
+
 language: node_js
 
 sudo: false
@@ -10,15 +15,15 @@ matrix:
         - npm run-script test-with-coverage
 
 node_js:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
+  #- 1 # problem with mocha
+  #- 2 # problem with mocha
+  #- 3 # problem with mocha
+  #- 4 # problem with [].includes()
+  #- 5 # problem with [].includes()
+  - 6 # timeout
+  - 7 # timeout
+  - 8 # working
+  - 9 # working
 
 cache:
   directories:

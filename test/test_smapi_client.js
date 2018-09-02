@@ -30,7 +30,7 @@ var testData = require('./data/common');
 
 function sleep() {
   // TODO figure out a cleaner way to add a wait time
-  Atomics.wait(new Int32Array(new SharedArrayBuffer(1024)), 0, 0, RETRY_TIMEOUT);
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(1024)), 0, 0, RETRY_TIMEOUT); // eslint-disable-line no-undef
 }
 
 SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
@@ -56,7 +56,7 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with access_token and sets token for future SMAPI calls', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             testData.accessToken = response.access_token;
             return response;
           });
@@ -75,7 +75,7 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with vendors array', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             testData.vendorId = response.vendors[0].id;
             return response;
           });
@@ -94,12 +94,12 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with skillId', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             testData.skillId = response.skillId;
             return response;
           });
           return expect(subject).to.eventually.have.property('skillId');
-          return expect(subject).to.eventually.have.property('location');
+          return expect(subject).to.eventually.have.property('location'); // eslint-disable-line no-unreachable
         });
       });
 
@@ -112,12 +112,12 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with list of skills', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             return response;
           });
           return expect(subject).to.eventually.have.property('_links');
-          return expect(subject).to.eventually.have.property('isTruncated');
-          return expect(subject).to.eventually.have.property('skills');
+          return expect(subject).to.eventually.have.property('isTruncated'); // eslint-disable-line no-unreachable
+          return expect(subject).to.eventually.have.property('skills'); // eslint-disable-line no-unreachable
         });
       });
 
@@ -131,17 +131,17 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
         it('responds with skill status', function() {
           this.retries(MAX_RETRIES);
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             var status;
             if (TEST_VERSION === VERSION_0) status = response.manifest.lastModified.status;
             else if (TEST_VERSION === VERSION_1) status = response.manifest.lastUpdateRequest.status;
-            console.log('---> Skill building: ' + status + ' <---');
+            console.log('---> Skill building: ' + status + ' <---'); // eslint-disable-line no-console
             if (status !== SKILL_READY[TEST_VERSION]) sleep();
             return response;
           });
           return expect(subject).to.eventually.have.property('manifest');
-          if (TEST_VERSION === VERSION_0) return expect(subject.manifest.lastModified).to.eventually.have.property('status', SKILL_READY[TEST_VERSION]);
-          else if (TEST_VERSION === VERSION_1) return expect(subject.manifest.lastUpdateRequest).to.eventually.have.property('status', SKILL_READY[TEST_VERSION]);
+          if (TEST_VERSION === VERSION_0) return expect(subject.manifest.lastModified).to.eventually.have.property('status', SKILL_READY[TEST_VERSION]); // eslint-disable-line no-unreachable
+          else if (TEST_VERSION === VERSION_1) return expect(subject.manifest.lastUpdateRequest).to.eventually.have.property('status', SKILL_READY[TEST_VERSION]); // eslint-disable-line no-unreachable
         });
       });
 
@@ -155,7 +155,7 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with skill manifest', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             return response;
           });
           if (TEST_VERSION === VERSION_0) return expect(subject).to.eventually.have.property('skillManifest');
@@ -173,11 +173,11 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with skill manifest', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             return response;
           });
           return expect(subject).to.eventually.have.property('location');
-          return expect(subject).to.eventually.have.property('etag');
+          return expect(subject).to.eventually.have.property('etag'); // eslint-disable-line no-unreachable
         });
       });
 
@@ -191,17 +191,17 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
         it('responds with skill status', function() {
           this.retries(MAX_RETRIES);
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             var status;
             if (TEST_VERSION === VERSION_0) status = response.manifest.lastModified.status;
             else if (TEST_VERSION === VERSION_1) status = response.manifest.lastUpdateRequest.status;
-            console.log('---> Skill building: ' + status + ' <---');
+            console.log('---> Skill building: ' + status + ' <---'); // eslint-disable-line no-console
             if (status !== SKILL_READY[TEST_VERSION]) sleep();
             return response;
           });
           return expect(subject).to.eventually.have.property('manifest');
-          if (TEST_VERSION === VERSION_0) return expect(subject.manifest.lastModified).to.eventually.have.property('status', SKILL_READY[TEST_VERSION]);
-          else if (TEST_VERSION === VERSION_1) return expect(subject.manifest.lastUpdateRequest).to.eventually.have.property('status', SKILL_READY[TEST_VERSION]);
+          if (TEST_VERSION === VERSION_0) return expect(subject.manifest.lastModified).to.eventually.have.property('status', SKILL_READY[TEST_VERSION]); // eslint-disable-line no-unreachable
+          else if (TEST_VERSION === VERSION_1) return expect(subject.manifest.lastUpdateRequest).to.eventually.have.property('status', SKILL_READY[TEST_VERSION]); // eslint-disable-line no-unreachable
         });
       });
     });
@@ -217,11 +217,11 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with interaction model location', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             return response;
           });
           return expect(subject).to.eventually.have.property('location');
-          return expect(subject).to.eventually.have.property('etag');
+          return expect(subject).to.eventually.have.property('etag'); // eslint-disable-line no-unreachable
         });
       });
 
@@ -235,14 +235,14 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
         it('responds with interaction model status', function() {
           this.retries(MAX_RETRIES);
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             var status;
             if (TEST_VERSION === VERSION_0) status = response.status;
             else if (TEST_VERSION === VERSION_1) {
               status = response.interactionModel[testData.locale].lastUpdateRequest.status;
               delete response.interactionModel[testData.locale].eTag;
             }
-            console.log('---> Model building: ' + status + ' <---');
+            console.log('---> Model building: ' + status + ' <---'); // eslint-disable-line no-console
             if (status !== MODEL_READY[TEST_VERSION]) sleep();
             return response;
           });
@@ -269,7 +269,7 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with etag', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             return response;
           });
           return expect(subject).to.eventually.have.property('etag');
@@ -286,7 +286,7 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with interaction model for ' + testData.locale, function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             return response;
           });
           return expect(subject).to.eventually.have.property('interactionModel');
@@ -305,7 +305,7 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with skillId', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             return response;
           });
           return expect(subject).to.eventually.have.property('TBD');
@@ -322,7 +322,7 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with skillId', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             return response;
           });
           return expect(subject).to.eventually.have.property('TBD');
@@ -338,7 +338,7 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with skillId', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             return response;
           });
           return expect(subject).to.eventually.be.empty;
@@ -356,7 +356,7 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
         it('responds with skill manifest', function() {
           subject = subject.then(function(response) {
-            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' '));
+            if (LOG_RESPONSES) console.log(JSON.stringify(response, null, ' ')); // eslint-disable-line no-console
             return response;
           });
           return expect(subject).to.eventually.be.empty;
