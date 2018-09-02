@@ -12,14 +12,17 @@ module.exports = {
   clientSecret: mySecrets.clientSecret,
   stage: 'development',
   locale: 'en-US',
+  locales: ['en-US'],
+  reason: 'OTHER',
+  message: 'node-alexa-smapi testing',
   v0: {
     skillManifest: require('./manifest_v0.json').skillManifest,
     interactionModel: require('./interactionModel.json').interactionModel,
-    accountLinkingRequest: require('./accountLinkingRequest.json'),
+    accountLinkingRequest: require('./accountLinkingRequest.json').accountLinkingRequest,
   },
   v1: {
     skillManifest: require('./manifest_v1.json').manifest,
     interactionModel: require('./interactionModel.json').interactionModel,
-    accountLinkingRequest: require('./accountLinkingRequest.json'),
+    accountLinkingRequest: require('./accountLinkingRequest.json').accountLinkingRequest,
   }
 };

@@ -187,6 +187,7 @@ function alexaSMAPI(params) {
 
   smapi.skillCertification = {
     submit: skillId => rest.post(`/${smapi.version}/skills/${skillId}/submit`),
+    status: (vendorId, skillId) => rest.get('/v1/skills', { vendorId, skillId }), // Trial and error as it is not properly documented at https://developer.amazon.com/docs/smapi/skill-certification-operations.html
     withdraw: (skillId, reason, message) => rest.post(`/${smapi.version}/skills/${skillId}/withdraw`, { reason, message })
   };
 
