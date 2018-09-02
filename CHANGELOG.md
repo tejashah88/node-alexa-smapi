@@ -1,6 +1,6 @@
 ## Changelog
 
-### 0.0.3 (Next)
+### 1.0.0 (Next)
 
 * [#3](https://github.com/tejashah88/node-alexa-smapi/issues/3): Added support for [SMAPI v1](https://developer.amazon.com/docs/smapi/smapi-migration.html) - [@marcelobern](https://github.com/marcelobern).
 * [#1](https://github.com/tejashah88/node-alexa-smapi/issues/1): Added unit testing for skill, interaction model, and vendor operations, added Travis CI integration - [@marcelobern](https://github.com/marcelobern).
