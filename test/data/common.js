@@ -1,6 +1,10 @@
 'use strict';
 
-const mySecrets = require('./secrets.json');
+const mySecrets = process.env.REFRESH_TOKEN && process.env.CLIENT_ID && process.env.CLIENT_SECRET ? {
+	refreshToken: process.env.REFRESH_TOKEN,
+	clientId: process.env.CLIENT_ID,
+	clientSecret: process.env.CLIENT_SECRET
+} : require('./secrets.json');
 
 module.exports = {
   refreshToken: mySecrets.refreshToken,
