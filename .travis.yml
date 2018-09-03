@@ -1,0 +1,41 @@
+# Add the following envirnment sensitive variables to Travis CI:
+# - REFRESH_TOKEN
+# - CLIENT_ID
+# - CLIENT_SECRET
+#
+# Limit Travis CI concurrent jobs to 1 and reduce risk of SMAPI rate limiting our test
+
+language: node_js
+
+sudo: false
+
+matrix:
+  include:
+    - node_js: node
+      script:
+        - npm run-script lint
+        - npm run-script test-with-coverage
+
+node_js:
+  #- 1 # problem with mocha
+  #- 2 # problem with mocha
+  #- 3 # problem with mocha
+  #- 4 # problem with [].includes()
+  #- 5 # problem with [].includes()
+  - 6 # timeout
+  - 7 # timeout
+  - 8 # working
+  - 9 # working
+
+cache:
+  directories:
+    - node_modules
+
+before_install:
+  - npm config set spin false
+
+after_success:
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+
+notifications:
+email: false

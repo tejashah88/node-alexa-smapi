@@ -1,10 +1,12 @@
 {
   "name": "node-alexa-smapi",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "A node.js client library for using the Alexa Skill Management API.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "test": "mocha",
+    "test-with-coverage": "nyc mocha"
   },
   "repository": {
     "type": "git",
@@ -25,5 +27,13 @@
   "homepage": "https://github.com/tejashah88/node-alexa-smapi#readme",
   "dependencies": {
     "axios": "^0.17.1"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^5.4.0",
+    "nyc": "^13.0.1",
+    "ask-cli": "^1.4.2"
   }
 }
