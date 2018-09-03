@@ -1,4 +1,4 @@
-# Add the following envirnment sensitive variables to Travis CI:
+# Add the following environment sensitive variables to Travis CI:
 # - REFRESH_TOKEN
 # - CLIENT_ID
 # - CLIENT_SECRET
