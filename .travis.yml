@@ -19,8 +19,8 @@ matrix:
 node_js:
   - 6 # timeout
   - 7 # timeout
-  - 8 # working
-  - 9 # working
+  - 8
+  - 9
 
 cache:
   directories:
