@@ -10,7 +10,7 @@ const MAX_RETRIES = 10; // number of times the test suite will check for complet
 const RETRY_TIMEOUT = 10000; // time (in milliseconds) to wait before checking again for completion of create/update operations
 const WITHDRAWAL_TIMEOUT = 1 * 60 * 1000; // time (in milliseconds) to wait before withdrawing skill from certification
 const MOCHA_TIMEOUT = WITHDRAWAL_TIMEOUT + 10000; // for details see https://mochajs.org/#timeouts
-const TEST_CERTIFICATION = true; // if true will run the Skill Certification test cases (adds a tens of minutes to this test run)
+const TEST_CERTIFICATION = process.env.TEST_CERTIFICATION || false; // if true will run the Skill Certification test cases (adds a tens of minutes to this test run)
 
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
@@ -265,6 +265,25 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
           subject = subject.then(waitOnSkill, retry);
           if (TEST_VERSION === VERSION_0) return expect(subject).to.eventually.have.nested.property('manifest.lastModified.status', SKILL_READY[TEST_VERSION]);
           else if (TEST_VERSION === VERSION_1) return expect(subject).to.eventually.have.nested.property('manifest.lastUpdateRequest.status', SKILL_READY[TEST_VERSION]);
+        });
+      });
+    });
+
+    context('-> Intent Request History Operations', function() {
+      describe('-> Get intent requests', function() {
+        var subject;
+
+        beforeEach(function() {
+          testData.intentRequestParams.skillId = testData.skillId;
+          subject = smapiClient.intentRequests.list(testData.intentRequestParams);
+        });
+
+        it('responds with no content', function() {
+          subject = subject.then(function(response) {
+            showResponse(response);
+            return response;
+          }, retry);
+          return expect(subject).to.eventually.have.property('items');
         });
       });
     });

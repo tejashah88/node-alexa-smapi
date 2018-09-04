@@ -41,6 +41,7 @@ Add the following environment variables to your Travis CI repository settings::
 - CLIENT_ID - clientId from your `test/data/secrets.json` within quotes to correctly bash-escape it.
 - CLIENT_SECRET - clientSecret from your `test/data/secrets.json`.
 - REFRESH_TOKEN - refreshToken from your `test/data/secrets.json` within quotes to correctly bash-escape it.
+- TEST_CERTIFICATION - flag to indicate if certification should be run or not. If not defined, it will be set to false.
 
 # Test configuration options
 Due to the asynchronous nature of this test suite, you may need to adjust one of the following configuration parameters so the test suite complete successfully.
