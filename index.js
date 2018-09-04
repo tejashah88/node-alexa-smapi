@@ -131,7 +131,7 @@ function alexaSMAPI(params) {
       };
       return rest.get(url[smapi.version]);
     },
-    getEtag: (skillId, stage, locale) => { // check
+    getEtag: (skillId, stage, locale) => {
       if (smapi.version === VERSION_0) locale = stage;
       const url = {
         v0: `/v0/skills/${skillId}/interactionModel/locales/${locale}`,
@@ -187,6 +187,7 @@ function alexaSMAPI(params) {
 
   smapi.skillCertification = {
     submit: skillId => rest.post(`/${smapi.version}/skills/${skillId}/submit`),
+    status: (vendorId, skillId) => rest.get('/v1/skills', { vendorId, skillId }), // Trial and error as it is not properly documented at https://developer.amazon.com/docs/smapi/skill-certification-operations.html
     withdraw: (skillId, reason, message) => rest.post(`/${smapi.version}/skills/${skillId}/withdraw`, { reason, message })
   };
 

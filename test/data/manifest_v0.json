@@ -3,19 +3,19 @@
   "publishingInformation": {
    "locales": {
     "en-US": {
-     "summary": "skill to test node-alexa-smapi",
+     "summary": "Skill to test node-alexa-smapi",
      "examplePhrases": [
       "Alexa open test smapi"
      ],
      "keywords": [],
-     "name": "SMAPI test skill",
+     "name": "node-alexa-smapi test skill",
      "smallIconUri": "https://s3.amazonaws.com/node-alexa-smapi/icons/icon_108_A2Z.png",
-     "description": "skill to test node-alexa-smapi",
+     "description": "Skill to test node-alexa-smapi",
      "largeIconUri": "https://s3.amazonaws.com/node-alexa-smapi/icons/icon_512_A2Z.png"
     }
    },
    "isAvailableWorldwide": true,
-   "testingInstructions": "this is a dummy skill just used to test node-alexa-smapi",
+   "testingInstructions": "This is a dummy skill just used to test node-alexa-smapi. As such it should not be approved during certification for go live!",
    "category": "NOVELTY",
    "distributionCountries": []
   },
@@ -34,7 +34,12 @@
    "isExportCompliant": true,
    "containsAds": false,
    "isChildDirected": false,
-   "usesPersonalInfo": false
+   "usesPersonalInfo": false,
+	 "locales": {
+		 "en-US": {
+			 "privacyPolicyUrl": "http://www.example.com/myprivacypolicy"
+		 }
+	 }
   }
  }
 }

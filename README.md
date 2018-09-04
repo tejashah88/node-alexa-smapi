@@ -7,7 +7,7 @@
 A node.js client library for using the Alexa Skill Management API.
 
 # Notice
-As of now, the following SMAPI operations in this module are **untested**: skill certification, skill enablement, skill testing (validation, invocation, simulation), and intent request history. So if there are any problems, please create a new issue or a pull request to fix the issue. Additionally you can help improve this library's stability by adding tests for yet untested SMAPI operations.
+As of now, the following SMAPI operations in this module are **untested**: skill testing (invocation, simulation), and intent request history. So if there are any problems, please create a new issue or a pull request to fix the issue. Additionally you can help improve this library's stability by adding tests for yet untested SMAPI operations.
 
 ## Table Of Contents
 
@@ -149,6 +149,10 @@ Official Documentation: https://developer.amazon.com/docs/smapi/skill-certificat
 ```javascript
 // Submit a skill for certification for potential publication.
 alexaSmapi.skillCertification.submit(String skillId)
+
+// Check status of a skill certification.
+// Working for v1 only as it was implemented mainly trough trial & error as operation  is not documented under https://developer.amazon.com/docs/smapi/skill-certification-operations.html
+alexaSmapi.skillCertification.status(String vendorId, String skillId)
 
 // Withdraw a skill from the certification process.
 // Possible enumeration values for 'reason'
