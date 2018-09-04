@@ -2,8 +2,6 @@
 # - REFRESH_TOKEN
 # - CLIENT_ID
 # - CLIENT_SECRET
-#
-# Limit Travis CI concurrent jobs to 1 and reduce risk of SMAPI rate limiting our test
 
 language: node_js
 
