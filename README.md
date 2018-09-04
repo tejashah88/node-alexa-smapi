@@ -1,4 +1,9 @@
 # node-alexa-smapi
+
+[![NPM Version](https://img.shields.io/npm/v/node-alexa-smapi.svg)](https://www.npmjs.com/package/node-alexa-smapi)
+[![Build Status](https://travis-ci.org/tejashah88/node-alexa-smapi.svg?branch=master)](https://travis-ci.org/tejashah88/node-alexa-smapi)
+[![Coverage Status](https://coveralls.io/repos/github/tejashah88/node-alexa-smapi/badge.svg?branch=master)](https://coveralls.io/github/tejashah88/node-alexa-smapi?branch=master)
+
 A node.js client library for using the Alexa Skill Management API.
 
 # Notice
@@ -31,7 +36,8 @@ All methods return a promise, which either resolves to the SMAPI data received, 
 
 ### Constructor
 ```javascript
-// Constructor for building the SMAPI REST client. params should be in the form: {version: "v0, or v1 (default)", region: "NA (default), EU, or FE"}.
+// Constructor for building the SMAPI REST client.
+// params should be in the form: {version: "v0, or v1 (default)", region: "NA (default), EU, or FE"}.
 Object alexaSmapi(optional Object params)
 ```
 
@@ -48,7 +54,8 @@ const BASE_URLS = {
 ### Access Tokens
 This module includes operation to retrieve a SMAPI compliant (Login with Amazon) access token. Immediately after instantiation invoke alexaSmapi.tokens.refresh(params) to seed the (Authorization header) access token for all future operations.
 ```javascript
-// Constructor for building the SMAPI REST client. params should be in the form: {version: "v0, or v1 (default)", region: "NA (default), EU, or FE"}.
+// Constructor for building the SMAPI REST client.
+// params should be in the form: {version: "v0, or v1 (default)", region: "NA (default), EU, or FE"}.
 const alexaSmapi = require('node-alexa-smapi');
 var smapiClient = alexaSmapi(optional Object params);
 smapiClient.tokens.refresh({
@@ -125,7 +132,8 @@ Array alexaSmapi.vendors.list()
 Official Documentation: https://developer.amazon.com/docs/smapi/skill-enablement.html
 
 ```javascript
-// Enables a skill stage for the requestor. The requestor should be either a developer or the owner of the skill. Please note that only one skill stage can be enabled for a given user at one time.
+// Enables a skill stage for the requestor. The requestor should be either a developer or the owner of the skill.
+// Please note that only one skill stage can be enabled for a given user at one time.
 alexaSmapi.skillEnablement.enable(String skillId, String stage)
 
 // Checks whether a skill stage is enabled or not for the requestor.
