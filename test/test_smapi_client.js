@@ -616,7 +616,7 @@ SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
       });
 
       if (TEST_VERSION === VERSION_1) describe('-> Check skill certification status', function() {
-        // Location returned by v0 is not valid
+        // Location returned by v0 is not usable
         var subject;
 
         beforeEach(function() {

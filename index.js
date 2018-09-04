@@ -131,7 +131,7 @@ function alexaSMAPI(params) {
       };
       return rest.get(url[smapi.version]);
     },
-    getEtag: (skillId, stage, locale) => { // check
+    getEtag: (skillId, stage, locale) => {
       if (smapi.version === VERSION_0) locale = stage;
       const url = {
         v0: `/v0/skills/${skillId}/interactionModel/locales/${locale}`,
