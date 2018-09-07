@@ -20,7 +20,7 @@ function alexaSMAPI(params) {
   const version = SUPPORTED_VERSIONS.includes(params.version) ? params.version : DEFAULT_VERSION;
   var smapi = { BASE_URLS, version };
 
-  var rest = {
+  smapi.rest = {
     client: axios.create({
       baseURL: BASE_URLS[params.region in BASE_URLS ? params.region : DEFAULT_GEO_REGION],
       headers: {
@@ -59,14 +59,14 @@ function alexaSMAPI(params) {
     if (typeof token !== 'string' || token.length === 0)
       throw new Error('Invalid token specified!');
     else
-      axios.defaults.headers.common['Authorization'] = token; // go back to rest.client... over axios... once can figure out why it was not working
+      smapi.rest.client.defaults.headers.common['Authorization'] = token;
   };
 
   smapi.setBaseUrl = (url) => {
     if (typeof url !== 'string' || url.length === 0)
       throw new Error('Invalid base url specified!');
     else
-      axios.defaults.baseURL = url; // go back to rest.client... over axios... once can figure out why it was not working
+      smapi.rest.client.defaults.baseURL = url;
   };
 
   smapi.tokens = {
@@ -100,26 +100,26 @@ function alexaSMAPI(params) {
         v0: `/v0/skills/${skillId}`,
         v1: `/v1/skills/${skillId}/stages/${stage}/manifest`
       };
-      return rest.get(url[smapi.version]);
+      return smapi.rest.get(url[smapi.version]);
     },
     create: (vendorId, skillManifest) => {
       if (smapi.version === VERSION_0) {
-        return rest.post('/v0/skills', { vendorId, skillManifest });
+        return smapi.rest.post('/v0/skills', { vendorId, skillManifest });
       } else if (smapi.version === VERSION_1) {
-        return rest.post('/v1/skills', { vendorId, manifest: skillManifest });
+        return smapi.rest.post('/v1/skills', { vendorId, manifest: skillManifest });
       }
     },
     update: (skillId, stage, skillManifest) => {
       if (smapi.version === VERSION_0) {
         skillManifest = stage;
-        return rest.put(`/v0/skills/${skillId}`, { skillManifest });
+        return smapi.rest.put(`/v0/skills/${skillId}`, { skillManifest });
       } else if (smapi.version === VERSION_1) {
-        return rest.put(`/v1/skills/${skillId}/stages/${stage}/manifest`, { manifest: skillManifest });
+        return smapi.rest.put(`/v1/skills/${skillId}/stages/${stage}/manifest`, { manifest: skillManifest });
       }
     },
-    status: skillId => rest.get(`/${smapi.version}/skills/${skillId}/status`),
-    list: (vendorId, maxResults, nextToken) => rest.get(`/${smapi.version}/skills`, { vendorId, maxResults, nextToken }),
-    delete: skillId => rest.delete(`/${smapi.version}/skills/${skillId}`)
+    status: skillId => smapi.rest.get(`/${smapi.version}/skills/${skillId}/status`),
+    list: (vendorId, maxResults, nextToken) => smapi.rest.get(`/${smapi.version}/skills`, { vendorId, maxResults, nextToken }),
+    delete: skillId => smapi.rest.delete(`/${smapi.version}/skills/${skillId}`)
   };
 
   smapi.interactionModel = {
@@ -129,7 +129,7 @@ function alexaSMAPI(params) {
         v0: `/v0/skills/${skillId}/interactionModel/locales/${locale}`,
         v1: `/v1/skills/${skillId}/stages/${stage}/interactionModel/locales/${locale}`
       };
-      return rest.get(url[smapi.version]);
+      return smapi.rest.get(url[smapi.version]);
     },
     getEtag: (skillId, stage, locale) => {
       if (smapi.version === VERSION_0) locale = stage;
@@ -137,22 +137,22 @@ function alexaSMAPI(params) {
         v0: `/v0/skills/${skillId}/interactionModel/locales/${locale}`,
         v1: `/v1/skills/${skillId}/stages/${stage}/interactionModel/locales/${locale}`
       };
-      return rest.head(url[smapi.version]);
+      return smapi.rest.head(url[smapi.version]);
     },
     update: (skillId, stage, locale, interactionModel) => {
       if (smapi.version === VERSION_0) {
         interactionModel = locale;
         locale = stage;
-        return rest.post(`/v0/skills/${skillId}/interactionModel/locales/${locale}`, { interactionModel });
+        return smapi.rest.post(`/v0/skills/${skillId}/interactionModel/locales/${locale}`, { interactionModel });
       } else if (smapi.version === VERSION_1)
-        return rest.put(`/v1/skills/${skillId}/stages/${stage}/interactionModel/locales/${locale}`, { interactionModel });
+        return smapi.rest.put(`/v1/skills/${skillId}/stages/${stage}/interactionModel/locales/${locale}`, { interactionModel });
     },
     getStatus: (skillId, locale) => {
       const url = {
         v0: `/v0/skills/${skillId}/interactionModel/locales/${locale}/status`,
         v1: `/v1/skills/${skillId}/status?resource=interactionModel`
       };
-      return rest.get(url[smapi.version]);
+      return smapi.rest.get(url[smapi.version]);
     }
   };
 
@@ -163,56 +163,56 @@ function alexaSMAPI(params) {
         v0: `/v0/skills/${skillId}/accountLinkingClient`,
         v1: `/v1/skills/${skillId}/stages/${stage}/accountLinkingClient`
       };
-      return rest.put(url[smapi.version], { accountLinkingRequest });
+      return smapi.rest.put(url[smapi.version], { accountLinkingRequest });
     },
     readInfo: (skillId, stage) => {
       const url = {
         v0: `/v0/skills/${skillId}/accountLinkingClient`,
         v1: `/v1/skills/${skillId}/stages/${stage}/accountLinkingClient`
       };
-      return rest.get(url[smapi.version]);
+      return smapi.rest.get(url[smapi.version]);
     },
-    delete: (skillId, stage) => rest.delete(`/v1/skills/${skillId}/stages/${stage}/accountLinkingClient`),
+    delete: (skillId, stage) => smapi.rest.delete(`/v1/skills/${skillId}/stages/${stage}/accountLinkingClient`),
   };
 
   smapi.vendors = {
-    list: () => rest.get(`/${smapi.version}/vendors`)
+    list: () => smapi.rest.get(`/${smapi.version}/vendors`)
   };
 
   smapi.skillEnablement = {
-    enable: (skillId, stage) => rest.put(`/v1/skills/${skillId}/stages/${stage}/enablement`),
-    status: (skillId, stage) => rest.get(`/v1/skills/${skillId}/stages/${stage}/enablement`),
-    disable: (skillId, stage) => rest.delete(`/v1/skills/${skillId}/stages/${stage}/enablement`)
+    enable: (skillId, stage) => smapi.rest.put(`/v1/skills/${skillId}/stages/${stage}/enablement`),
+    status: (skillId, stage) => smapi.rest.get(`/v1/skills/${skillId}/stages/${stage}/enablement`),
+    disable: (skillId, stage) => smapi.rest.delete(`/v1/skills/${skillId}/stages/${stage}/enablement`)
   };
 
   smapi.skillCertification = {
-    submit: skillId => rest.post(`/${smapi.version}/skills/${skillId}/submit`),
-    status: (vendorId, skillId) => rest.get('/v1/skills', { vendorId, skillId }), // Trial and error as it is not properly documented at https://developer.amazon.com/docs/smapi/skill-certification-operations.html
-    withdraw: (skillId, reason, message) => rest.post(`/${smapi.version}/skills/${skillId}/withdraw`, { reason, message })
+    submit: skillId => smapi.rest.post(`/${smapi.version}/skills/${skillId}/submit`),
+    status: (vendorId, skillId) => smapi.rest.get('/v1/skills', { vendorId, skillId }), // Trial and error as it is not properly documented at https://developer.amazon.com/docs/smapi/skill-certification-operations.html
+    withdraw: (skillId, reason, message) => smapi.rest.post(`/${smapi.version}/skills/${skillId}/withdraw`, { reason, message })
   };
 
   smapi.skillTesting = {
-    validate: (skillId, stage, locales) => rest.post(`/v1/skills/${skillId}/stages/${stage}/validations`, { locales }),
-    validationStatus: (skillId, stage, validationId) => rest.get(`/v1/skills/${skillId}/stages/${stage}/validations/${validationId}`),
-    invoke: (skillId, endpointRegion, skillRequest) => rest.post(`/${smapi.version}/skills/${skillId}/invocations`, { endpointRegion, skillRequest }),
-    simulate: (skillId, content, locale) => rest.post(`/${smapi.version}/skills/${skillId}/simulations`, { input: { content }, device: { locale } }),
-    simulationStatus: (skillId, requestId) => rest.get(`/${smapi.version}/skills/${skillId}/simulations/${requestId}`)
+    validate: (skillId, stage, locales) => smapi.rest.post(`/v1/skills/${skillId}/stages/${stage}/validations`, { locales }),
+    validationStatus: (skillId, stage, validationId) => smapi.rest.get(`/v1/skills/${skillId}/stages/${stage}/validations/${validationId}`),
+    invoke: (skillId, endpointRegion, skillRequest) => smapi.rest.post(`/${smapi.version}/skills/${skillId}/invocations`, { endpointRegion, skillRequest }),
+    simulate: (skillId, content, locale) => smapi.rest.post(`/${smapi.version}/skills/${skillId}/simulations`, { input: { content }, device: { locale } }),
+    simulationStatus: (skillId, requestId) => smapi.rest.get(`/${smapi.version}/skills/${skillId}/simulations/${requestId}`)
   };
 
   smapi.intentRequests = {
     list: (params) => {
       const skillId = params.skillId;
       delete params.skillId;
-      return rest.get(`/v1/skills/${skillId}/history/intentRequests`, params);
+      return smapi.rest.get(`/v1/skills/${skillId}/history/intentRequests`, params);
     }
   };
 
   smapi.custom = {
-    head: url => rest.head(url),
-    get: (url, parameters) => rest.get(url, parameters),
-    post: (url, parameters) => rest.post(url, parameters),
-    put: (url, parameters) => rest.put(url, parameters),
-    delete: url => rest.delete(url)
+    head: url => smapi.rest.head(url),
+    get: (url, parameters) => smapi.rest.get(url, parameters),
+    post: (url, parameters) => smapi.rest.post(url, parameters),
+    put: (url, parameters) => smapi.rest.put(url, parameters),
+    delete: url => smapi.rest.delete(url)
   };
 
   return smapi;
