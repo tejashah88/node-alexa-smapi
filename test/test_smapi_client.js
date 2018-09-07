@@ -10,7 +10,7 @@ const MAX_RETRIES = 10; // number of times the test suite will check for complet
 const RETRY_TIMEOUT = 10000; // time (in milliseconds) to wait before checking again for completion of create/update operations
 const WITHDRAWAL_TIMEOUT = 1 * 60 * 1000; // time (in milliseconds) to wait before withdrawing skill from certification
 const MOCHA_TIMEOUT = WITHDRAWAL_TIMEOUT + 10000; // for details see https://mochajs.org/#timeouts
-const TEST_CERTIFICATION = process.env.TEST_CERTIFICATION || false; // if true will run the Skill Certification test cases (adds a tens of minutes to this test run)
+const TEST_CERTIFICATION = process.env.TEST_CERTIFICATION === 'true' ? true : false; // if true will run the Skill Certification test cases (adds a tens of minutes to this test run)
 
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
