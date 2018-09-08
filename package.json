@@ -6,6 +6,9 @@
   "scripts": {
     "lint": "eslint .",
     "test": "mocha",
+    "test-integration": "TEST_TYPE=integration npm test",
+    "test-certification": "TEST_TYPE=certification npm test",
+    "test-capture": "TEST_TYPE=capture npm test",
     "test-with-coverage": "nyc npm test && nyc report --reporter=text-lcov | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
@@ -20,6 +23,7 @@
     "smapi"
   ],
   "author": "tejashah88",
+  "contributors": "marcelobern",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tejashah88/node-alexa-smapi/issues"
@@ -30,6 +34,7 @@
   },
   "devDependencies": {
     "ask-cli": "^1.4.2",
+    "axios-mock-adapter": "^1.15.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "coveralls": "^3.0.2",
