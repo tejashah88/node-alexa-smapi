@@ -84,22 +84,22 @@ describe('Testing node-alexa-smapi', function() {
 
   SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
 
-		function waitOnCertification(error) {
-		  const summary = errorSummary(error);
-		  if ((
-					TEST_VERSION === VERSION_0 && summary.data.violations &&
+    function waitOnCertification(error) {
+      const summary = errorSummary(error);
+      if ((
+        TEST_VERSION === VERSION_0 && summary.data.violations &&
 					!summary.data.violations[0].message.includes('No skill submission record found')
-				) || (
-					TEST_VERSION === VERSION_1 && summary.data.message &&
+      ) || (
+          TEST_VERSION === VERSION_1 && summary.data.message &&
 					!summary.data.message.includes('No skill submission record found')
-		  )) {
-		    showError(summary);
-		    console.log(`---> Operation status: ${summary.status} (${summary.data.message}) - will sleep for ${WITHDRAWAL_TIMEOUT/1000}s & retry <---`); // eslint-disable-line no-console
-		    return sleep(WITHDRAWAL_TIMEOUT).then((summary) => {
-		      return summary;
-		    });
-		  } else return summary;
-		}
+        )) {
+        showError(summary);
+        console.log(`---> Operation status: ${summary.status} (${summary.data.message}) - will sleep for ${WITHDRAWAL_TIMEOUT/1000}s & retry <---`); // eslint-disable-line no-console
+        return sleep(WITHDRAWAL_TIMEOUT).then((summary) => {
+          return summary;
+        });
+      } else return summary;
+    }
 
     function waitOnSkill(response) {
       showResponse(response);
