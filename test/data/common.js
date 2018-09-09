@@ -17,6 +17,11 @@ module.exports = {
   locales: [LOCALE],
   reason: 'OTHER',
   message: 'node-alexa-smapi testing',
+  endpointRegion: 'Default', // string enum["Default", "NA", "EU", "FE", etc],
+  skillRequest: {
+    body: require('./request.json')
+  },
+  simulationContent: 'api',
   intentRequestParams: {
     nextToken: null,
     maxResults: 10,
