@@ -26,7 +26,7 @@ chai.use(chaiAsPromised);
 var expect = chai.expect;
 chai.config.includeStack = true;
 
-var utils = require('./utils/utils');
+const SMAPI_CLIENT = require('../index');
 if (shouldMock(TEST_TYPE)) require('./utils/mockAdapter');
 
 const VERSION_0 = 'v0';
@@ -40,6 +40,7 @@ const MODEL_READY = {
   v0: 'SUCCESS',
   v1: 'SUCCEEDED'
 };
+const BAD_URL = '/v1/skills/badSkill';
 var testData = require('./data/common');
 
 function showResponse(response) {
@@ -74,12 +75,12 @@ function retry(error) {
   }
 }
 
-var responses = [];
+var responses = require('./utils/responses');
 
 describe('Testing node-alexa-smapi', function() {
   after(function(){
     // Persist response template
-    if (shouldCapture(TEST_TYPE)) utils.persist('./test/data/responses.json', responses);
+    if (shouldCapture(TEST_TYPE)) responses.persist('./test/data/responses.json');
   });
 
   SUPPORTED_VERSIONS.forEach(function(TEST_VERSION) {
@@ -88,11 +89,11 @@ describe('Testing node-alexa-smapi', function() {
       const summary = errorSummary(error);
       if ((
         TEST_VERSION === VERSION_0 && summary.data.violations &&
-					!summary.data.violations[0].message.includes('No skill submission record found')
+				!summary.data.violations[0].message.includes('No skill submission record found')
       ) || (
-          TEST_VERSION === VERSION_1 && summary.data.message &&
-					!summary.data.message.includes('No skill submission record found')
-        )) {
+        TEST_VERSION === VERSION_1 && summary.data.message &&
+				!summary.data.message.includes('No skill submission record found')
+      )) {
         showError(summary);
         console.log(`---> Operation status: ${summary.status} (${summary.data.message}) - will sleep for ${WITHDRAWAL_TIMEOUT/1000}s & retry <---`); // eslint-disable-line no-console
         return sleep(WITHDRAWAL_TIMEOUT).then((summary) => {
@@ -139,7 +140,7 @@ describe('Testing node-alexa-smapi', function() {
     describe('Testing with SMAPI ' + TEST_VERSION, function() {
       after(function(){
         // Persist response template
-        if (shouldCapture(TEST_TYPE)) responses = utils.sanitize(responses, {
+        if (shouldCapture(TEST_TYPE)) responses.sanitize({
           VENDOR_ID: testData.vendorId,
           SKILL_ID: testData.skillId
         });
@@ -148,23 +149,10 @@ describe('Testing node-alexa-smapi', function() {
       this.slow(1500);
       this.retries(MAX_RETRIES);
       this.timeout(MOCHA_TIMEOUT);
-      const smapiClient = require('../index')({
+      const smapiClient = SMAPI_CLIENT({
         version: TEST_VERSION
       });
-
-      if (shouldCapture(TEST_TYPE)) smapiClient.rest.client.interceptors.response.use(function (response) {
-      // Capture response template
-        responses.push({
-          url: response.config.url.replace(response.config.baseURL, ''),
-          method: response.config.method,
-          headers: {
-            location: response.headers.location,
-            etag: response.headers.etag
-          },
-          data: response.data,
-        });
-        return response;
-      });
+      if (shouldCapture(TEST_TYPE)) smapiClient.rest.client.interceptors.response.use(responses.add);
 
       context('-> Token Management', function() {
         describe('-> refresh token', function() {
@@ -556,114 +544,6 @@ describe('Testing node-alexa-smapi', function() {
         });
       });
 
-      context('-> Custom Operations', function() {
-        describe('-> head() - Head Interaction Model', function() {
-          var subject;
-
-          beforeEach(function() {
-            const url = {
-              v0: `/v0/skills/${testData.skillId}/interactionModel/locales/${testData.locale}`,
-              v1: `/v1/skills/${testData.skillId}/stages/${testData.stage}/interactionModel/locales/${testData.locale}`
-            };
-            subject = smapiClient.custom.head(url[TEST_VERSION]);
-          });
-
-          it('responds with etag', function() {
-            subject = subject.then(function(response) {
-              showResponse(response);
-              return response;
-            }, retry);
-            return expect(subject).to.eventually.have.property('etag');
-          });
-        });
-
-        describe('-> post() & put() - Update Interaction Model', function() {
-          var subject;
-
-          beforeEach(function() {
-            const url = {
-              v0: `/v0/skills/${testData.skillId}/interactionModel/locales/${testData.locale}`,
-              v1: `/v1/skills/${testData.skillId}/stages/${testData.stage}/interactionModel/locales/${testData.locale}`
-            };
-            if (TEST_VERSION === VERSION_0) subject = smapiClient.custom.post(url[TEST_VERSION], { interactionModel: testData[TEST_VERSION].interactionModel });
-            else if (TEST_VERSION === VERSION_1) subject = smapiClient.custom.put(url[TEST_VERSION], { interactionModel: testData[TEST_VERSION].interactionModel });
-          });
-
-          it('responds with interaction model location', function() {
-            subject = subject.then(function(response) {
-              showResponse(response);
-              return response;
-            }, retry);
-            return Promise.all([
-              expect(subject).to.eventually.have.property('location'),
-              expect(subject).to.eventually.have.property('etag')
-            ]);
-          });
-        });
-
-        describe('-> get() - Get the Interaction Model Building Status', function() {
-          var subject;
-
-          beforeEach(function() {
-            const url = {
-              v0: `/v0/skills/${testData.skillId}/interactionModel/locales/${testData.locale}/status`,
-              v1: `/v1/skills/${testData.skillId}/status?resource=interactionModel`
-            };
-            subject = smapiClient.custom.get(url[TEST_VERSION]);
-          });
-
-          it('responds with interaction model status', function() {
-            subject = subject.then(waitOnModel, retry);
-            if (TEST_VERSION === VERSION_0) return expect(subject).to.eventually.have.property('status', MODEL_READY[TEST_VERSION]);
-            else if (TEST_VERSION === VERSION_1) return expect(subject).to.eventually.become({
-              'interactionModel': {
-                'en-US': {
-                  'lastUpdateRequest': {
-                    'status': MODEL_READY[TEST_VERSION]
-                  }
-                }
-              }
-            });
-          });
-        });
-
-        describe('-> put() - Update Account Linking', function() {
-          var subject;
-
-          beforeEach(function() {
-            const url = {
-              v0: `/v0/skills/${testData.skillId}/accountLinkingClient`,
-              v1: `/v1/skills/${testData.skillId}/stages/${testData.stage}/accountLinkingClient`
-            };
-            subject = smapiClient.custom.put(url[TEST_VERSION], { accountLinkingRequest: testData[TEST_VERSION].accountLinkingRequest });
-          });
-
-          it('responds with etag', function() {
-            subject = subject.then(function(response) {
-              showResponse(response);
-              return response;
-            }, retry);
-            return expect(subject).to.eventually.have.property('etag');
-          });
-        });
-
-        if (TEST_VERSION === VERSION_1) describe('-> delete() - Delete Account Linking', function() {
-          var subject;
-
-          beforeEach(function() {
-            subject = smapiClient.custom.delete(`/v1/skills/${testData.skillId}/stages/${testData.stage}/accountLinkingClient`);
-          });
-
-          it('responds with no content', function() {
-            subject = subject.then(function(response) {
-              showResponse(response);
-              return response;
-            }, retry);
-            return expect(subject).to.eventually.be.empty;
-          });
-        });
-      });
-
       if (shouldCertify(TEST_TYPE)) context('-> Skill Certification Operations', function() {
         describe('-> Submit a skill for certification', function() {
           var subject;
@@ -740,6 +620,140 @@ describe('Testing node-alexa-smapi', function() {
             return expect(subject).to.eventually.be.empty;
           });
         });
+      });
+    });
+  });
+  context('-> Other scenarios', function() {
+    describe('-> Create SMAPI client with no parameters', function() {
+      var smapiClient;
+      beforeEach(function() {
+        smapiClient = SMAPI_CLIENT();
+        if (shouldCapture(TEST_TYPE)) smapiClient.rest.client.interceptors.response.use(responses.add);
+      });
+
+      it('responds with a Object with default version', function() {
+        expect(smapiClient).to.have.property('version', 'v1');
+      });
+
+      const baseUrlWillThrow = () => smapiClient.setBaseUrl('');
+      it('throws exception with bad baseURL', function() {
+        expect(baseUrlWillThrow).to.throw;
+      });
+
+      const baseUrlWillNotThrow = () => smapiClient.setBaseUrl(smapiClient.BASE_URLS.NA);
+      it('sets the new baseURL', function() {
+        expect(baseUrlWillNotThrow).to.not.throw;
+      });
+
+      const tokenRefreshWillThrow = () => smapiClient.refreshToken('');
+      it('throws exception with bad token', function() {
+        expect(tokenRefreshWillThrow).to.throw;
+      });
+
+      const tokensRefreshWillThrow = () => smapiClient.tokens.refresh({
+        refreshToken: 'bad',
+        clientId: testData.clientId,
+        clientSecret: testData.clientSecret,
+      });
+      it('throws exception with bad tokens.refresh params', function() {
+        expect(tokensRefreshWillThrow).to.throw;
+      });
+
+      context('-> Custom Operations with bad skillId, no access_token', function() {
+        describe('-> head()', function() {
+          var subject;
+
+          beforeEach(function() {
+            subject = smapiClient.custom.head(BAD_URL);
+          });
+
+          it('responds with status 405', function() {
+            subject = subject.then(function(response) {
+              showResponse(response);
+              return response;
+            }, retry);
+            return expect(subject).to.eventually.have.property('status', 405);
+          });
+        });
+
+        describe('-> get()', function() {
+          var subject;
+
+          beforeEach(function() {
+            subject = smapiClient.custom.get(BAD_URL);
+          });
+
+          it('responds with status 405', function() {
+            subject = subject.then(function(response) {
+              showResponse(response);
+              return response;
+            }, retry);
+            return expect(subject).to.eventually.have.property('status', 405);
+          });
+        });
+
+        describe('-> post()', function() {
+          var subject;
+
+          beforeEach(function() {
+            subject = smapiClient.custom.post(BAD_URL);
+          });
+
+          it('responds with status 405', function() {
+            subject = subject.then(function(response) {
+              showResponse(response);
+              return response;
+            }, retry);
+            return expect(subject).to.eventually.have.property('status', 405);
+          });
+        });
+
+        describe('-> put()', function() {
+          var subject;
+
+          beforeEach(function() {
+            subject = smapiClient.custom.put(BAD_URL);
+          });
+
+          it('responds with status 405', function() {
+            subject = subject.then(function(response) {
+              showResponse(response);
+              return response;
+            }, retry);
+            return expect(subject).to.eventually.have.property('status', 405);
+          });
+        });
+
+        describe('-> delete()', function() {
+          var subject;
+
+          beforeEach(function() {
+            subject = smapiClient.custom.delete(BAD_URL);
+          });
+
+          it('responds with status 400', function() {
+            subject = subject.then(function(response) {
+              showResponse(response);
+              return response;
+            }, retry);
+            return expect(subject).to.eventually.have.property('status', 400);
+          });
+        });
+      });
+    });
+
+    describe('-> Create SMAPI client with bad version', function() {
+      var smapiClient;
+      beforeEach(function() {
+        smapiClient = SMAPI_CLIENT({
+          version: 'bad',
+          region: 'bad'
+        });
+      });
+
+      it('responds with a Object with default version', function() {
+        expect(smapiClient).to.have.property('version', 'v1');
+        expect(smapiClient).to.have.nested.property('version', 'v1');
       });
     });
   });

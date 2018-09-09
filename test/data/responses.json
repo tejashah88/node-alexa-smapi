@@ -2,6 +2,7 @@
  {
   "url": "/v0/vendors",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "vendors": [
@@ -18,6 +19,7 @@
  {
   "url": "/v0/skills",
   "method": "post",
+  "status": 202,
   "headers": {
    "location": "/v0/skills/SKILL_ID/status"
   },
@@ -28,6 +30,7 @@
  {
   "url": "/v0/skills",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "_links": {
@@ -56,6 +59,7 @@
  {
   "url": "/v0/skills/SKILL_ID/status",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "manifest": {
@@ -69,6 +73,7 @@
  {
   "url": "/v0/skills/SKILL_ID",
   "method": "get",
+  "status": 200,
   "headers": {
    "etag": "1fcc91186b360a2ff59d631037711820"
   },
@@ -121,6 +126,7 @@
  {
   "url": "/v0/skills/SKILL_ID",
   "method": "put",
+  "status": 202,
   "headers": {
    "location": "/v0/skills/SKILL_ID/status"
   },
@@ -129,6 +135,7 @@
  {
   "url": "/v0/skills/SKILL_ID/status",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "manifest": {
@@ -142,6 +149,7 @@
  {
   "url": "/v1/skills/SKILL_ID/history/intentRequests",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "_links": {
@@ -160,6 +168,7 @@
  {
   "url": "/v0/skills/SKILL_ID/interactionModel/locales/en-US",
   "method": "post",
+  "status": 202,
   "headers": {
    "location": "/v0/skills/SKILL_ID/interactionModel/locales/en-US/status"
   },
@@ -168,6 +177,7 @@
  {
   "url": "/v0/skills/SKILL_ID/interactionModel/locales/en-US/status",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "status": "SUCCESS"
@@ -176,6 +186,7 @@
  {
   "url": "/v0/skills/SKILL_ID/interactionModel/locales/en-US",
   "method": "head",
+  "status": 200,
   "headers": {
    "etag": "e86999354016f13af5107f711098642d"
   },
@@ -184,6 +195,7 @@
  {
   "url": "/v0/skills/SKILL_ID/interactionModel/locales/en-US",
   "method": "get",
+  "status": 200,
   "headers": {
    "etag": "e86999354016f13af5107f711098642d"
   },
@@ -226,6 +238,7 @@
  {
   "url": "/v0/skills/SKILL_ID/accountLinkingClient",
   "method": "put",
+  "status": 204,
   "headers": {
    "etag": "ac947106382b260e0617e57b17b70a6e"
   },
@@ -234,6 +247,7 @@
  {
   "url": "/v0/skills/SKILL_ID/accountLinkingClient",
   "method": "get",
+  "status": 200,
   "headers": {
    "etag": "ac947106382b260e0617e57b17b70a6e"
   },
@@ -252,56 +266,28 @@
  {
   "url": "/v1/skills/SKILL_ID/stages/development/enablement",
   "method": "put",
+  "status": 204,
   "headers": {},
   "data": ""
  },
  {
   "url": "/v1/skills/SKILL_ID/stages/development/enablement",
   "method": "get",
+  "status": 204,
   "headers": {},
   "data": ""
  },
  {
   "url": "/v1/skills/SKILL_ID/stages/development/enablement",
   "method": "put",
+  "status": 204,
   "headers": {},
-  "data": ""
- },
- {
-  "url": "/v0/skills/SKILL_ID/interactionModel/locales/en-US",
-  "method": "head",
-  "headers": {
-   "etag": "e86999354016f13af5107f711098642d"
-  },
-  "data": ""
- },
- {
-  "url": "/v0/skills/SKILL_ID/interactionModel/locales/en-US",
-  "method": "post",
-  "headers": {
-   "location": "/v0/skills/SKILL_ID/interactionModel/locales/en-US/status"
-  },
-  "data": {}
- },
- {
-  "url": "/v0/skills/SKILL_ID/interactionModel/locales/en-US/status",
-  "method": "get",
-  "headers": {},
-  "data": {
-   "status": "SUCCESS"
-  }
- },
- {
-  "url": "/v0/skills/SKILL_ID/accountLinkingClient",
-  "method": "put",
-  "headers": {
-   "etag": "ac947106382b260e0617e57b17b70a6e"
-  },
   "data": ""
  },
  {
   "url": "/v0/skills/SKILL_ID/submit",
   "method": "post",
+  "status": 202,
   "headers": {
    "location": "/v0/skills/SKILL_ID/stages/certification/"
   },
@@ -310,18 +296,21 @@
  {
   "url": "/v0/skills/SKILL_ID/withdraw",
   "method": "post",
+  "status": 204,
   "headers": {},
   "data": ""
  },
  {
   "url": "/v0/skills/SKILL_ID",
   "method": "delete",
+  "status": 204,
   "headers": {},
   "data": ""
  },
  {
   "url": "/v1/vendors",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "vendors": [
@@ -338,6 +327,7 @@
  {
   "url": "/v1/skills",
   "method": "post",
+  "status": 202,
   "headers": {
    "location": "/v1/skills/SKILL_ID/status?resource=manifest"
   },
@@ -348,6 +338,7 @@
  {
   "url": "/v1/skills",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "_links": {
@@ -362,6 +353,7 @@
  {
   "url": "/v1/skills/SKILL_ID/status",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "manifest": {
@@ -375,6 +367,7 @@
  {
   "url": "/v1/skills/SKILL_ID/stages/development/manifest",
   "method": "get",
+  "status": 200,
   "headers": {
    "etag": "b53b3d5bf2b17cdde95cb19f7fdda7ce"
   },
@@ -422,6 +415,7 @@
  {
   "url": "/v1/skills/SKILL_ID/stages/development/manifest",
   "method": "put",
+  "status": 202,
   "headers": {
    "location": "/v1/skills/SKILL_ID/status?resource=manifest"
   },
@@ -430,6 +424,7 @@
  {
   "url": "/v1/skills/SKILL_ID/status",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "manifest": {
@@ -443,6 +438,7 @@
  {
   "url": "/v1/skills/SKILL_ID/history/intentRequests",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "_links": {
@@ -461,6 +457,7 @@
  {
   "url": "/v1/skills/SKILL_ID/stages/development/interactionModel/locales/en-US",
   "method": "put",
+  "status": 202,
   "headers": {
    "location": "/v1/skills/SKILL_ID/status?resource=interactionModel"
   },
@@ -469,6 +466,7 @@
  {
   "url": "/v1/skills/SKILL_ID/status?resource=interactionModel",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "interactionModel": {
@@ -483,6 +481,7 @@
  {
   "url": "/v1/skills/SKILL_ID/stages/development/interactionModel/locales/en-US",
   "method": "head",
+  "status": 204,
   "headers": {
    "etag": "e86999354016f13af5107f711098642d"
   },
@@ -491,6 +490,7 @@
  {
   "url": "/v1/skills/SKILL_ID/stages/development/interactionModel/locales/en-US",
   "method": "get",
+  "status": 200,
   "headers": {
    "etag": "e86999354016f13af5107f711098642d"
   },
@@ -533,6 +533,7 @@
  {
   "url": "/v1/skills/SKILL_ID/stages/development/accountLinkingClient",
   "method": "put",
+  "status": 204,
   "headers": {
    "etag": "ac947106382b260e0617e57b17b70a6e"
   },
@@ -541,6 +542,7 @@
  {
   "url": "/v1/skills/SKILL_ID/stages/development/accountLinkingClient",
   "method": "get",
+  "status": 200,
   "headers": {
    "etag": "ac947106382b260e0617e57b17b70a6e"
   },
@@ -559,30 +561,35 @@
  {
   "url": "/v1/skills/SKILL_ID/stages/development/accountLinkingClient",
   "method": "delete",
+  "status": 204,
   "headers": {},
   "data": ""
  },
  {
   "url": "/v1/skills/SKILL_ID/stages/development/enablement",
   "method": "put",
+  "status": 204,
   "headers": {},
   "data": ""
  },
  {
   "url": "/v1/skills/SKILL_ID/stages/development/enablement",
   "method": "get",
+  "status": 204,
   "headers": {},
   "data": ""
  },
  {
   "url": "/v1/skills/SKILL_ID/stages/development/enablement",
   "method": "put",
+  "status": 204,
   "headers": {},
   "data": ""
  },
  {
   "url": "/v1/skills/SKILL_ID/stages/development/validations",
   "method": "post",
+  "status": 200,
   "headers": {},
   "data": {
    "id": "0d4a0075-6c12-4abf-a2da-e7fc09e36d33",
@@ -592,6 +599,7 @@
  {
   "url": "/v1/skills/SKILL_ID/stages/development/validations/0d4a0075-6c12-4abf-a2da-e7fc09e36d33",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "id": "0d4a0075-6c12-4abf-a2da-e7fc09e36d33",
@@ -673,52 +681,9 @@
   }
  },
  {
-  "url": "/v1/skills/SKILL_ID/stages/development/interactionModel/locales/en-US",
-  "method": "head",
-  "headers": {
-   "etag": "e86999354016f13af5107f711098642d"
-  },
-  "data": ""
- },
- {
-  "url": "/v1/skills/SKILL_ID/stages/development/interactionModel/locales/en-US",
-  "method": "put",
-  "headers": {
-   "location": "/v1/skills/SKILL_ID/status?resource=interactionModel"
-  },
-  "data": {}
- },
- {
-  "url": "/v1/skills/SKILL_ID/status?resource=interactionModel",
-  "method": "get",
-  "headers": {},
-  "data": {
-   "interactionModel": {
-    "en-US": {
-     "lastUpdateRequest": {
-      "status": "SUCCEEDED"
-     }
-    }
-   }
-  }
- },
- {
-  "url": "/v1/skills/SKILL_ID/stages/development/accountLinkingClient",
-  "method": "put",
-  "headers": {
-   "etag": "ac947106382b260e0617e57b17b70a6e"
-  },
-  "data": ""
- },
- {
-  "url": "/v1/skills/SKILL_ID/stages/development/accountLinkingClient",
-  "method": "delete",
-  "headers": {},
-  "data": ""
- },
- {
   "url": "/v1/skills/SKILL_ID/submit",
   "method": "post",
+  "status": 202,
   "headers": {
    "location": "/v1/skills?vendorId=VENDOR_ID&skillId=SKILL_ID"
   },
@@ -727,6 +692,7 @@
  {
   "url": "/v1/skills",
   "method": "get",
+  "status": 200,
   "headers": {},
   "data": {
    "_links": {
@@ -759,12 +725,49 @@
  {
   "url": "/v1/skills/SKILL_ID/withdraw",
   "method": "post",
+  "status": 204,
   "headers": {},
   "data": ""
  },
  {
   "url": "/v1/skills/SKILL_ID",
   "method": "delete",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/badSkill",
+  "method": "head",
+  "status": 405,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/badSkill",
+  "method": "get",
+  "status": 405,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/badSkill",
+  "method": "post",
+  "status": 405,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/badSkill",
+  "method": "put",
+  "status": 405,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/badSkill",
+  "method": "delete",
+  "status": 400,
   "headers": {},
   "data": ""
  }
