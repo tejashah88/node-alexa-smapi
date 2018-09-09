@@ -8,7 +8,14 @@ const responses = require('../data/responses.json');
 // This sets the mock adapter on the default instance
 var mock = new MockAdapter(axios);
 
-mock.onPost('/auth/o2/token').reply(200, {access_token: 'dummy'}); // Added manually to avoid security risks
+// Token related mocked operations were added manually to avoid exposing sensitive data
+mock.onPost('/auth/o2/token', {
+  grant_type: 'refresh_token',
+  refresh_token: 'bad',
+  client_id: 'bad',
+  client_secret: 'bad'
+}).reply(401);
+mock.onPost('/auth/o2/token').reply(200, { access_token: 'dummy' });
 
 for (var response of responses) {
   switch (response.method) {

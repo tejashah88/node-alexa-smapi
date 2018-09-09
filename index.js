@@ -30,27 +30,27 @@ function alexaSMAPI(params) {
     }),
     head: function(url) {
       return this.client.head(url)
-        .then(response => ({location: response.headers.location, etag: response.headers.etag}))
+        .then(response => ({status: response.status, location: response.headers.location, etag: response.headers.etag}))
         .catch(response => Promise.reject(response.response));
     },
     get: function(url, parameters) {
       return this.client.get(url, { params: parameters !== undefined ? parameters : {} })
-        .then(response => response.data)
+        .then(response => Object.assign({}, {status: response.status}, response.data))
         .catch(response => Promise.reject(response.response));
     },
     post: function(url, parameters) {
       return this.client.post(url, parameters !== undefined ? parameters : {})
-        .then(response => Object.assign({}, {location: response.headers.location, etag: response.headers.etag}, response.data))
+        .then(response => Object.assign({}, {status: response.status, location: response.headers.location, etag: response.headers.etag}, response.data))
         .catch(response => Promise.reject(response.response));
     },
     put: function(url, parameters) {
       return this.client.put(url, parameters !== undefined ? parameters : {})
-        .then(response => ({location: response.headers.location, etag: response.headers.etag}))
+        .then(response => ({status: response.status, location: response.headers.location, etag: response.headers.etag}))
         .catch(response => Promise.reject(response.response));
     },
     delete: function(url) {
       return this.client.delete(url)
-        .then(response => response.data)
+        .then(response => Object.assign({}, {status: response.status}, response.data))
         .catch(response => Promise.reject(response.response));
     }
   };

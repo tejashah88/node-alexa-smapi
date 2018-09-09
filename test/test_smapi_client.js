@@ -87,13 +87,16 @@ describe('Testing node-alexa-smapi', function() {
 
     function waitOnCertification(error) {
       const summary = errorSummary(error);
-      if ((
+      if (summary.status === 400 && ((
         TEST_VERSION === VERSION_0 && summary.data.violations &&
-				!summary.data.violations[0].message.includes('No skill submission record found')
+				summary.data.violations[0].message.includes('No skill submission record found')
       ) || (
-        TEST_VERSION === VERSION_1 && summary.data.message &&
-				!summary.data.message.includes('No skill submission record found')
-      )) {
+          TEST_VERSION === VERSION_1 && summary.data.message &&
+				summary.data.message.includes('No skill submission record found')
+        ))) {
+        showError(summary);
+        return {status: 204, etag: undefined, location: undefined};
+      } else if (summary.status < 200 || summary.status >= 300) {
         showError(summary);
         console.log(`---> Operation status: ${summary.status} (${summary.data.message}) - will sleep for ${WITHDRAWAL_TIMEOUT/1000}s & retry <---`); // eslint-disable-line no-console
         return sleep(WITHDRAWAL_TIMEOUT).then((summary) => {
@@ -140,10 +143,17 @@ describe('Testing node-alexa-smapi', function() {
     describe('Testing with SMAPI ' + TEST_VERSION, function() {
       after(function(){
         // Persist response template
-        if (shouldCapture(TEST_TYPE)) responses.sanitize({
-          VENDOR_ID: testData.vendorId,
-          SKILL_ID: testData.skillId
-        });
+        if (shouldCapture(TEST_TYPE)) {
+          if (TEST_VERSION === VERSION_0) responses.sanitize({
+            VENDOR_ID: testData.vendorId,
+            SKILL_ID: testData.skillId
+          });
+          else if (TEST_VERSION === VERSION_1) responses.sanitize({
+            VENDOR_ID: testData.vendorId,
+            SKILL_ID: testData.skillId,
+            VALIDATION_ID: testData.validationId
+          });
+        }
       });
 
       this.slow(1500);
@@ -355,6 +365,7 @@ describe('Testing node-alexa-smapi', function() {
             subject = subject.then(waitOnModel, retry);
             if (TEST_VERSION === VERSION_0) return expect(subject).to.eventually.have.property('status', MODEL_READY[TEST_VERSION]);
             else if (TEST_VERSION === VERSION_1) return expect(subject).to.eventually.become({
+              'status': 200,
               'interactionModel': {
                 'en-US': {
                   'lastUpdateRequest': {
@@ -448,7 +459,7 @@ describe('Testing node-alexa-smapi', function() {
               showResponse(response);
               return response;
             }, retry);
-            return expect(subject).to.eventually.be.empty;
+            return expect(subject).to.eventually.be.have.property('status', 204);
           });
         });
       });
@@ -466,10 +477,7 @@ describe('Testing node-alexa-smapi', function() {
               showResponse(response);
               return response;
             }, retry);
-            return expect(subject).to.eventually.be.deep.equal({
-              location: undefined,
-              etag: undefined
-            });
+            return expect(subject).to.eventually.have.property('status', 204);
           });
         });
 
@@ -485,7 +493,7 @@ describe('Testing node-alexa-smapi', function() {
               showResponse(response);
               return response;
             }, retry);
-            return expect(subject).to.eventually.be.empty;
+            return expect(subject).to.eventually.have.property('status', 204);
           });
         });
 
@@ -493,7 +501,7 @@ describe('Testing node-alexa-smapi', function() {
           var subject;
 
           beforeEach(function() {
-            subject = smapiClient.skillEnablement.enable(testData.skillId, testData.stage);
+            subject = smapiClient.skillEnablement.disable(testData.skillId, testData.stage);
           });
 
           it('responds with no content', function() {
@@ -501,10 +509,7 @@ describe('Testing node-alexa-smapi', function() {
               showResponse(response);
               return response;
             }, retry);
-            return expect(subject).to.eventually.be.deep.equal({
-              location: undefined,
-              etag: undefined
-            });
+            return expect(subject).to.eventually.have.property('status', 204);
           });
         });
       });
@@ -594,12 +599,11 @@ describe('Testing node-alexa-smapi', function() {
               showResponse(response);
               return response;
             }, waitOnCertification);
-            return Promise.all([
-              expect(subject).to.become({
-                etag: undefined,
-                location: undefined
-              }),
-            ]);
+            return expect(subject).to.become({
+              status: 204,
+              etag: undefined,
+              location: undefined
+            });
           });
         });
       });
@@ -617,7 +621,7 @@ describe('Testing node-alexa-smapi', function() {
               showResponse(response);
               return response;
             }, retry);
-            return expect(subject).to.eventually.be.empty;
+            return expect(subject).to.eventually.be.have.property('status', 204);
           });
         });
       });
@@ -635,31 +639,43 @@ describe('Testing node-alexa-smapi', function() {
         expect(smapiClient).to.have.property('version', 'v1');
       });
 
-      const baseUrlWillThrow = () => smapiClient.setBaseUrl('');
-      it('throws exception with bad baseURL', function() {
-        expect(baseUrlWillThrow).to.throw;
+      describe('-> smapiClient.setBaseUrl() with bad baseURL', function() {
+        it('throws Error', function() {
+          expect(() => smapiClient.setBaseUrl('')).to.throw(Error);
+        });
       });
 
-      const baseUrlWillNotThrow = () => smapiClient.setBaseUrl(smapiClient.BASE_URLS.NA);
-      it('sets the new baseURL', function() {
-        expect(baseUrlWillNotThrow).to.not.throw;
+      describe('-> smapiClient.setBaseUrl() with valid baseURL', function() {
+        it('does not throw Error', function() {
+          expect(() => smapiClient.setBaseUrl('notEmpty')).to.not.throw(Error);
+        });
       });
 
-      const tokenRefreshWillThrow = () => smapiClient.refreshToken('');
-      it('throws exception with bad token', function() {
-        expect(tokenRefreshWillThrow).to.throw;
+      describe('-> smapiClient.refreshToken() with bad token', function() {
+        it('throws Error', function() {
+          expect(() => smapiClient.refreshToken('')).to.throw(Error);
+        });
       });
 
-      const tokensRefreshWillThrow = () => smapiClient.tokens.refresh({
-        refreshToken: 'bad',
-        clientId: testData.clientId,
-        clientSecret: testData.clientSecret,
-      });
-      it('throws exception with bad tokens.refresh params', function() {
-        expect(tokensRefreshWillThrow).to.throw;
+      describe('-> smapiClient.tokens.refresh() with bad refreshToken', function() {
+        const tokensRefreshWillThrow = () => smapiClient.tokens.refresh({
+          refreshToken: 'bad',
+          clientId: 'bad',
+          clientSecret: 'bad'
+        });
+        var subject;
+
+        beforeEach(function() {
+          subject = tokensRefreshWillThrow();
+        });
+
+        it('eventually be rejected', function() {
+          return expect(subject).to.eventually.be.rejected;
+        });
       });
 
       context('-> Custom Operations with bad skillId, no access_token', function() {
+        // TODO: troubleshoot why smapiClient.rest.client.interceptors.response.use(responses.add) is not capturing these responses
         describe('-> head()', function() {
           var subject;
 

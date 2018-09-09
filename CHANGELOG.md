@@ -4,6 +4,7 @@
 
 * [#1](https://github.com/tejashah88/node-alexa-smapi/issues/1): Added unit testing for account linking, skill enablement, skill testing (validation only) and node-alexa-smapi custom operations, Travis CI integration now working for Nodejs version 6 through 10. Added coveralls.io integration - [@marcelobern](https://github.com/marcelobern).
 * Added support for undocumented certification status operation (`alexaSmapi.skillCertification.status()`). Currently working with SMAPI v1 (location returned by SMAPI v0 is not valid/usable) - [@marcelobern](https://github.com/marcelobern).
+* HEAD, GET, POST, PUT, and DELETE operations now also return HTTP status - [@marcelobern](https://github.com/marcelobern).
 
 ### 1.0.0 (Sep/3/2018)
 
