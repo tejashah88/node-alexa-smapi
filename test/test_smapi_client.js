@@ -52,12 +52,14 @@ function showError(error) {
 }
 
 function errorSummary(error) {
-  const summary = {
+  const expectedErrorKeywords = /badSkill|invocations/;
+  // should only add error responses for invoke & custom methods
+  if (expectedErrorKeywords.test(error.config.url)) responses.add(error);
+  return {
     status: error.status,
     statusText: error.statusText,
     data: error.data
   };
-  return summary;
 }
 
 var sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -140,17 +142,19 @@ describe('Testing node-alexa-smapi', function() {
       }
     }
 
-    describe('Testing with SMAPI ' + TEST_VERSION, function() {
+    describe('Testing with SMAPI ' + TEST_VERSION + ' for region NA', function() {
       after(function(){
         // Persist response template
         if (shouldCapture(TEST_TYPE)) {
           if (TEST_VERSION === VERSION_0) responses.sanitize({
             VENDOR_ID: testData.vendorId,
-            SKILL_ID: testData.skillId
+            SKILL_ID: testData.skillId,
+            SIMULATION_ID: testData.simulationId
           });
           else if (TEST_VERSION === VERSION_1) responses.sanitize({
             VENDOR_ID: testData.vendorId,
             SKILL_ID: testData.skillId,
+            SIMULATION_ID: testData.simulationId,
             VALIDATION_ID: testData.validationId
           });
         }
@@ -160,7 +164,8 @@ describe('Testing node-alexa-smapi', function() {
       this.retries(MAX_RETRIES);
       this.timeout(MOCHA_TIMEOUT);
       const smapiClient = SMAPI_CLIENT({
-        version: TEST_VERSION
+        version: TEST_VERSION,
+        region: 'NA'
       });
       if (shouldCapture(TEST_TYPE)) smapiClient.rest.client.interceptors.response.use(responses.add);
 
@@ -464,7 +469,7 @@ describe('Testing node-alexa-smapi', function() {
         });
       });
 
-      context('-> Skill Enablement Operations', function() {
+      context('-> Skill Enablement Operations (except disable)', function() {
         describe('-> Enable a skill', function() {
           var subject;
 
@@ -486,22 +491,6 @@ describe('Testing node-alexa-smapi', function() {
 
           beforeEach(function() {
             subject = smapiClient.skillEnablement.status(testData.skillId, testData.stage);
-          });
-
-          it('responds with no content', function() {
-            subject = subject.then(function(response) {
-              showResponse(response);
-              return response;
-            }, retry);
-            return expect(subject).to.eventually.have.property('status', 204);
-          });
-        });
-
-        describe('-> Disable a skill', function() {
-          var subject;
-
-          beforeEach(function() {
-            subject = smapiClient.skillEnablement.disable(testData.skillId, testData.stage);
           });
 
           it('responds with no content', function() {
@@ -545,6 +534,75 @@ describe('Testing node-alexa-smapi', function() {
               return response;
             }, retry);
             return expect(subject).to.eventually.have.property('status');
+          });
+        });
+
+        describe('-> Invoke a skill', function() {
+          var subject;
+
+          beforeEach(function() {
+            testData.skillRequest.body.session.application.applicationId =
+							testData.skillRequest.body.context.System.application.applicationId = testData.skillId;
+            subject = smapiClient.skillTesting.invoke(testData.skillId, testData.endpointRegion, testData.skillRequest);
+          });
+
+          it('responds with internal server error (no reply as skill code is not deployed anywhere)', function() {
+            subject = subject.then(function(response) {
+              showResponse(response);
+              return response;
+            }, retry);
+            return expect(subject).to.eventually.have.property('status', 500);
+          });
+        });
+
+        describe('-> Simulate a skill', function() {
+          var subject;
+
+          beforeEach(function() {
+            subject = smapiClient.skillTesting.simulate(testData.skillId, testData.simulationContent, testData.locale);
+          });
+
+          it('responds with simulationId', function() {
+            subject = subject.then(function(response) {
+              showResponse(response);
+              testData.simulationId = response.id;
+              return response;
+            }, retry);
+            return expect(subject).to.eventually.have.property('id');
+          });
+        });
+
+        describe('-> Check status of a skill simulation', function() {
+          var subject;
+
+          beforeEach(function() {
+            subject = smapiClient.skillTesting.simulationStatus(testData.skillId, testData.simulationId);
+          });
+
+          it('responds with simulation status', function() {
+            subject = subject.then(function(response) {
+              showResponse(response);
+              return response;
+            }, retry);
+            return expect(subject).to.eventually.have.property('status');
+          });
+        });
+      });
+
+      context('-> Skill Enablement Operations (disable only)', function() {
+        describe('-> Disable a skill', function() {
+          var subject;
+
+          beforeEach(function() {
+            subject = smapiClient.skillEnablement.disable(testData.skillId, testData.stage);
+          });
+
+          it('responds with no content', function() {
+            subject = subject.then(function(response) {
+              showResponse(response);
+              return response;
+            }, retry);
+            return expect(subject).to.eventually.have.property('status', 204);
           });
         });
       });
@@ -675,7 +733,6 @@ describe('Testing node-alexa-smapi', function() {
       });
 
       context('-> Custom Operations with bad skillId, no access_token', function() {
-        // TODO: troubleshoot why smapiClient.rest.client.interceptors.response.use(responses.add) is not capturing these responses
         describe('-> head()', function() {
           var subject;
 

@@ -278,6 +278,35 @@
   "data": ""
  },
  {
+  "url": "/v0/skills/SKILL_ID/invocations",
+  "method": "post",
+  "status": 500,
+  "headers": {},
+  "data": {
+   "message": "An unexpected error occurred."
+  }
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/simulations",
+  "method": "post",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "id": "SIMULATION_ID",
+   "status": "IN_PROGRESS"
+  }
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/simulations/SIMULATION_ID",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "id": "SIMULATION_ID",
+   "status": "IN_PROGRESS"
+  }
+ },
+ {
   "url": "/v1/skills/SKILL_ID/stages/development/enablement",
   "method": "delete",
   "status": 204,
@@ -580,13 +609,6 @@
   "data": ""
  },
  {
-  "url": "/v1/skills/SKILL_ID/stages/development/enablement",
-  "method": "delete",
-  "status": 204,
-  "headers": {},
-  "data": ""
- },
- {
   "url": "/v1/skills/SKILL_ID/stages/development/validations",
   "method": "post",
   "status": 200,
@@ -605,6 +627,42 @@
    "id": "VALIDATION_ID",
    "status": "IN_PROGRESS"
   }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/invocations",
+  "method": "post",
+  "status": 500,
+  "headers": {},
+  "data": {
+   "message": "An unexpected error occurred."
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/simulations",
+  "method": "post",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "id": "SIMULATION_ID",
+   "status": "IN_PROGRESS"
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/simulations/SIMULATION_ID",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "id": "SIMULATION_ID",
+   "status": "IN_PROGRESS"
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/enablement",
+  "method": "delete",
+  "status": 204,
+  "headers": {},
+  "data": ""
  },
  {
   "url": "/v1/skills/SKILL_ID/submit",
@@ -674,27 +732,29 @@
   "method": "get",
   "status": 405,
   "headers": {},
-  "data": ""
+  "data": "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n<html><head>\n<title>405 Method Not Allowed</title>\n</head><body>\n<h1>Method Not Allowed</h1>\n<p>The requested method GET is not allowed for the URL /v1/skills/badSkill.</p>\n</body></html>\n"
  },
  {
   "url": "/v1/skills/badSkill",
   "method": "post",
   "status": 405,
   "headers": {},
-  "data": ""
+  "data": "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n<html><head>\n<title>405 Method Not Allowed</title>\n</head><body>\n<h1>Method Not Allowed</h1>\n<p>The requested method POST is not allowed for the URL /v1/skills/badSkill.</p>\n</body></html>\n"
  },
  {
   "url": "/v1/skills/badSkill",
   "method": "put",
   "status": 405,
   "headers": {},
-  "data": ""
+  "data": "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\">\n<html><head>\n<title>405 Method Not Allowed</title>\n</head><body>\n<h1>Method Not Allowed</h1>\n<p>The requested method PUT is not allowed for the URL /v1/skills/badSkill.</p>\n</body></html>\n"
  },
  {
   "url": "/v1/skills/badSkill",
   "method": "delete",
   "status": 400,
   "headers": {},
-  "data": ""
+  "data": {
+   "message": "1 validation error detected: Value 'badSkill' at 'skillStageIdentifiers.1.member.skillId' failed to satisfy constraint: Member must satisfy regular expression pattern: (^amzn1\\.ask\\.skill\\.[0-9a-f\\-]+)|(^amzn1\\.echo-sdk-ams\\.app\\.[0-9a-f\\-]+)"
+  }
  }
 ]

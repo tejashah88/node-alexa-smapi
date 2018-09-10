@@ -6,9 +6,6 @@
 
 A node.js client library for using the Alexa Skill Management API.
 
-# Notice
-As of now, the following SMAPI operations in this module are **untested**: skill testing (invocation, simulation), and intent request history. So if there are any problems, please create a new issue or a pull request to fix the issue. Additionally you can help improve this library's stability by adding tests for yet untested SMAPI operations.
-
 ## Table Of Contents
 
 * [Documentation](#documentation)
