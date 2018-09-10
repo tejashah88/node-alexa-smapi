@@ -15,8 +15,8 @@ matrix:
         - npm run-script test-with-coverage
 
 node_js:
-  - 6 # timeout
-  - 7 # timeout
+  - 6
+  - 7
   - 8
   - 9
 

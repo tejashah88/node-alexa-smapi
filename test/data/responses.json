@@ -1,0 +1,700 @@
+[
+ {
+  "url": "/v0/vendors",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "vendors": [
+    {
+     "id": "VENDOR_ID",
+     "name": "Tester",
+     "roles": [
+      "ROLE_ADMINISTRATOR"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "url": "/v0/skills",
+  "method": "post",
+  "status": 202,
+  "headers": {
+   "location": "/v0/skills/SKILL_ID/status"
+  },
+  "data": {
+   "skillId": "SKILL_ID"
+  }
+ },
+ {
+  "url": "/v0/skills",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "_links": {
+    "self": {
+     "href": "/v0/skills?vendorId=VENDOR_ID&maxResults=10"
+    }
+   },
+   "isTruncated": false,
+   "skills": [
+    {
+     "_links": {
+      "self": {
+       "href": "/v0/skills/SKILL_ID"
+      }
+     },
+     "lastUpdated": "TIMESTAMP",
+     "nameByLocale": {
+      "en-US": "node-alexa-smapi test skill"
+     },
+     "skillId": "SKILL_ID",
+     "stage": "development"
+    }
+   ]
+  }
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/status",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "manifest": {
+    "lastModified": {
+     "time": "TIMESTAMP",
+     "status": "SUCCESSFUL"
+    }
+   }
+  }
+ },
+ {
+  "url": "/v0/skills/SKILL_ID",
+  "method": "get",
+  "status": 200,
+  "headers": {
+   "etag": "1fcc91186b360a2ff59d631037711820"
+  },
+  "data": {
+   "skillManifest": {
+    "publishingInformation": {
+     "locales": {
+      "en-US": {
+       "summary": "Skill to test node-alexa-smapi",
+       "examplePhrases": [
+        "Alexa open test smapi"
+       ],
+       "keywords": [],
+       "name": "node-alexa-smapi test skill",
+       "smallIconUri": "https://s3.amazonaws.com/node-alexa-smapi/icons/icon_108_A2Z.png",
+       "description": "Skill to test node-alexa-smapi",
+       "largeIconUri": "https://s3.amazonaws.com/node-alexa-smapi/icons/icon_512_A2Z.png"
+      }
+     },
+     "isAvailableWorldwide": true,
+     "testingInstructions": "This is a dummy skill just used to test node-alexa-smapi. As such it should not be approved during certification for go live!",
+     "category": "NOVELTY",
+     "distributionCountries": []
+    },
+    "apis": {
+     "custom": {
+      "endpoint": {
+       "sslCertificateType": "Wildcard",
+       "uri": "https://www.example.com"
+      },
+      "interfaces": []
+     }
+    },
+    "manifestVersion": "1.0",
+    "privacyAndCompliance": {
+     "allowsPurchases": false,
+     "locales": {
+      "en-US": {
+       "privacyPolicyUrl": "http://www.example.com/myprivacypolicy"
+      }
+     },
+     "isExportCompliant": true,
+     "containsAds": false,
+     "isChildDirected": false,
+     "usesPersonalInfo": false
+    }
+   }
+  }
+ },
+ {
+  "url": "/v0/skills/SKILL_ID",
+  "method": "put",
+  "status": 202,
+  "headers": {
+   "location": "/v0/skills/SKILL_ID/status"
+  },
+  "data": {}
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/status",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "manifest": {
+    "lastModified": {
+     "time": "TIMESTAMP",
+     "status": "SUCCESSFUL"
+    }
+   }
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/history/intentRequests",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "_links": {
+    "next": {},
+    "self": {
+     "href": "/v1/skills/SKILL_ID/history/intentRequests?stage=development&locale=en-US&intent.confidence.bin=low&intent.name=AMAZON.HelpIntent&publicationStatus=development&interactionType=MODAL&utteranceText=ape&maxResults=10&sortDirection=desc&sortField=intent.confidence.bin"
+    }
+   },
+   "isTruncated": false,
+   "items": [],
+   "skillId": "SKILL_ID",
+   "startIndex": 0,
+   "totalCount": 0
+  }
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/interactionModel/locales/en-US",
+  "method": "post",
+  "status": 202,
+  "headers": {
+   "location": "/v0/skills/SKILL_ID/interactionModel/locales/en-US/status"
+  },
+  "data": {}
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/interactionModel/locales/en-US/status",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "status": "SUCCESS"
+  }
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/interactionModel/locales/en-US",
+  "method": "head",
+  "status": 200,
+  "headers": {
+   "etag": "e86999354016f13af5107f711098642d"
+  },
+  "data": ""
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/interactionModel/locales/en-US",
+  "method": "get",
+  "status": 200,
+  "headers": {
+   "etag": "e86999354016f13af5107f711098642d"
+  },
+  "data": {
+   "interactionModel": {
+    "languageModel": {
+     "invocationName": "test smapi",
+     "intents": [
+      {
+       "name": "AMAZON.FallbackIntent",
+       "samples": []
+      },
+      {
+       "name": "AMAZON.CancelIntent",
+       "samples": []
+      },
+      {
+       "name": "AMAZON.HelpIntent",
+       "samples": []
+      },
+      {
+       "name": "AMAZON.StopIntent",
+       "samples": []
+      },
+      {
+       "name": "AMAZON.NavigateHomeIntent",
+       "samples": []
+      },
+      {
+       "name": "testIntent",
+       "samples": [
+        "API"
+       ]
+      }
+     ]
+    }
+   }
+  }
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/accountLinkingClient",
+  "method": "put",
+  "status": 204,
+  "headers": {
+   "etag": "ac947106382b260e0617e57b17b70a6e"
+  },
+  "data": ""
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/accountLinkingClient",
+  "method": "get",
+  "status": 200,
+  "headers": {
+   "etag": "ac947106382b260e0617e57b17b70a6e"
+  },
+  "data": {
+   "accountLinkingResponse": {
+    "defaultTokenExpirationInSeconds": 3600,
+    "clientId": "MY_CLIENT",
+    "authorizationUrl": "https://www.example.com/auth_url",
+    "accessTokenUrl": "https://www.example.com/accessToken_url",
+    "domains": [],
+    "accessTokenScheme": "HTTP_BASIC",
+    "type": "AUTH_CODE"
+   }
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/enablement",
+  "method": "put",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/enablement",
+  "method": "get",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/enablement",
+  "method": "delete",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/submit",
+  "method": "post",
+  "status": 202,
+  "headers": {
+   "location": "/v0/skills/SKILL_ID/stages/certification/"
+  },
+  "data": {}
+ },
+ {
+  "url": "/v0/skills/SKILL_ID/withdraw",
+  "method": "post",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v0/skills/SKILL_ID",
+  "method": "delete",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/vendors",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "vendors": [
+    {
+     "id": "VENDOR_ID",
+     "name": "Tester",
+     "roles": [
+      "ROLE_ADMINISTRATOR"
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "url": "/v1/skills",
+  "method": "post",
+  "status": 202,
+  "headers": {
+   "location": "/v1/skills/SKILL_ID/status?resource=manifest"
+  },
+  "data": {
+   "skillId": "SKILL_ID"
+  }
+ },
+ {
+  "url": "/v1/skills",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "_links": {
+    "self": {
+     "href": "/v1/skills?vendorId=VENDOR_ID&maxResults=10"
+    }
+   },
+   "isTruncated": false,
+   "skills": []
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/status",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "manifest": {
+    "eTag": "b53b3d5bf2b17cdde95cb19f7fdda7ce",
+    "lastUpdateRequest": {
+     "status": "SUCCEEDED"
+    }
+   }
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/manifest",
+  "method": "get",
+  "status": 200,
+  "headers": {
+   "etag": "b53b3d5bf2b17cdde95cb19f7fdda7ce"
+  },
+  "data": {
+   "manifest": {
+    "publishingInformation": {
+     "locales": {
+      "en-US": {
+       "summary": "Skill to test node-alexa-smapi",
+       "examplePhrases": [
+        "Alexa open test smapi"
+       ],
+       "keywords": [],
+       "name": "node-alexa-smapi test skill",
+       "smallIconUri": "https://s3.amazonaws.com/node-alexa-smapi/icons/icon_108_A2Z.png",
+       "description": "Skill to test node-alexa-smapi",
+       "largeIconUri": "https://s3.amazonaws.com/node-alexa-smapi/icons/icon_512_A2Z.png"
+      }
+     },
+     "isAvailableWorldwide": true,
+     "testingInstructions": "This is a dummy skill just used to test node-alexa-smapi. As such it should not be approved during certification for go live!",
+     "category": "NOVELTY",
+     "distributionCountries": []
+    },
+    "apis": {
+     "custom": {
+      "endpoint": {
+       "sslCertificateType": "Wildcard",
+       "uri": "https://www.example.com"
+      },
+      "interfaces": []
+     }
+    },
+    "manifestVersion": "1.0",
+    "privacyAndCompliance": {
+     "allowsPurchases": false,
+     "isExportCompliant": true,
+     "containsAds": false,
+     "isChildDirected": false,
+     "usesPersonalInfo": false
+    }
+   }
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/manifest",
+  "method": "put",
+  "status": 202,
+  "headers": {
+   "location": "/v1/skills/SKILL_ID/status?resource=manifest"
+  },
+  "data": {}
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/status",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "manifest": {
+    "eTag": "b53b3d5bf2b17cdde95cb19f7fdda7ce",
+    "lastUpdateRequest": {
+     "status": "SUCCEEDED"
+    }
+   }
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/history/intentRequests",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "_links": {
+    "next": {},
+    "self": {
+     "href": "/v1/skills/SKILL_ID/history/intentRequests?stage=development&locale=en-US&intent.confidence.bin=low&intent.name=AMAZON.HelpIntent&publicationStatus=development&interactionType=MODAL&utteranceText=ape&maxResults=10&sortDirection=desc&sortField=intent.confidence.bin"
+    }
+   },
+   "isTruncated": false,
+   "items": [],
+   "skillId": "SKILL_ID",
+   "startIndex": 0,
+   "totalCount": 0
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/interactionModel/locales/en-US",
+  "method": "put",
+  "status": 202,
+  "headers": {
+   "location": "/v1/skills/SKILL_ID/status?resource=interactionModel"
+  },
+  "data": {}
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/status?resource=interactionModel",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "interactionModel": {
+    "en-US": {
+     "lastUpdateRequest": {
+      "status": "SUCCEEDED"
+     }
+    }
+   }
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/interactionModel/locales/en-US",
+  "method": "head",
+  "status": 204,
+  "headers": {
+   "etag": "e86999354016f13af5107f711098642d"
+  },
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/interactionModel/locales/en-US",
+  "method": "get",
+  "status": 200,
+  "headers": {
+   "etag": "e86999354016f13af5107f711098642d"
+  },
+  "data": {
+   "interactionModel": {
+    "languageModel": {
+     "invocationName": "test smapi",
+     "intents": [
+      {
+       "name": "AMAZON.FallbackIntent",
+       "samples": []
+      },
+      {
+       "name": "AMAZON.CancelIntent",
+       "samples": []
+      },
+      {
+       "name": "AMAZON.HelpIntent",
+       "samples": []
+      },
+      {
+       "name": "AMAZON.StopIntent",
+       "samples": []
+      },
+      {
+       "name": "AMAZON.NavigateHomeIntent",
+       "samples": []
+      },
+      {
+       "name": "testIntent",
+       "samples": [
+        "API"
+       ]
+      }
+     ]
+    }
+   }
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/accountLinkingClient",
+  "method": "put",
+  "status": 204,
+  "headers": {
+   "etag": "ac947106382b260e0617e57b17b70a6e"
+  },
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/accountLinkingClient",
+  "method": "get",
+  "status": 200,
+  "headers": {
+   "etag": "ac947106382b260e0617e57b17b70a6e"
+  },
+  "data": {
+   "accountLinkingResponse": {
+    "accessTokenScheme": "HTTP_BASIC",
+    "accessTokenUrl": "https://www.example.com/accessToken_url",
+    "authorizationUrl": "https://www.example.com/auth_url",
+    "clientId": "MY_CLIENT",
+    "defaultTokenExpirationInSeconds": 3600,
+    "domains": [],
+    "type": "AUTH_CODE"
+   }
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/accountLinkingClient",
+  "method": "delete",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/enablement",
+  "method": "put",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/enablement",
+  "method": "get",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/enablement",
+  "method": "delete",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/validations",
+  "method": "post",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "id": "VALIDATION_ID",
+   "status": "IN_PROGRESS"
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/stages/development/validations/VALIDATION_ID",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "id": "VALIDATION_ID",
+   "status": "IN_PROGRESS"
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/submit",
+  "method": "post",
+  "status": 202,
+  "headers": {
+   "location": "/v1/skills?vendorId=VENDOR_ID&skillId=SKILL_ID"
+  },
+  "data": {}
+ },
+ {
+  "url": "/v1/skills",
+  "method": "get",
+  "status": 200,
+  "headers": {},
+  "data": {
+   "_links": {
+    "self": {
+     "href": "/v1/skills?vendorId=VENDOR_ID&skillId=SKILL_ID"
+    }
+   },
+   "isTruncated": false,
+   "skills": [
+    {
+     "_links": {
+      "self": {
+       "href": "/v1/skills/SKILL_ID/stages/development/manifest"
+      }
+     },
+     "apis": [
+      "custom"
+     ],
+     "lastUpdated": "TIMESTAMP",
+     "nameByLocale": {
+      "en-US": "node-alexa-smapi test skill"
+     },
+     "publicationStatus": "CERTIFICATION",
+     "skillId": "SKILL_ID",
+     "stage": "development"
+    }
+   ]
+  }
+ },
+ {
+  "url": "/v1/skills/SKILL_ID/withdraw",
+  "method": "post",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/SKILL_ID",
+  "method": "delete",
+  "status": 204,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/badSkill",
+  "method": "head",
+  "status": 405,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/badSkill",
+  "method": "get",
+  "status": 405,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/badSkill",
+  "method": "post",
+  "status": 405,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/badSkill",
+  "method": "put",
+  "status": 405,
+  "headers": {},
+  "data": ""
+ },
+ {
+  "url": "/v1/skills/badSkill",
+  "method": "delete",
+  "status": 400,
+  "headers": {},
+  "data": ""
+ }
+]

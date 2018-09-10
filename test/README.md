@@ -1,14 +1,20 @@
 # About the node-alexa-smapi test suite
-This test suite will perform the following actions:
-- Retrieve a valid access_token and keep it for use in all SMAPI invocations.
+This test suite can be executed in one of four modes:
+- **Unit** mode: will use the responses stored in test/data/responses.json to execute the test suite.
+- **Integration** mode: will connect live to Alexa SMAPI servers to execute the test suite (excluding certification tests).
+- **Certification** mode: will connect live to Alexa SMAPI servers to execute the test suite (including certification tests).
+- **Capture** mode: will connect live to Alexa SMAPI servers to execute the test suite (including certification tests) and store the responses in test/data/responses.json.
+
+All modes will perform the following actions:
+- Retrieve a valid access_token and keep it for use in all SMAPI invocations (**unit** mode will use a dummy access_token).
 - List all vendors and use the first vendor (account) in the list to create a test skill.
 - Invoke all SMAPI operations against this test skill and retry failed invocations as many as (test configuration flag) `MAX_RETRIES` times.
 - Will sleep before retries when receiving a `429` rate limiting status.
-- If test configuration `TEST_CERTIFICATION` flag is set:
-  - Submit skill for certification. **The owner of the vendor (account) should expect a certification submission email from Amazon and may receive a certification feedback on as well ;-)**
+- In all test modes except **integration** mode the following will happen:
+  - Submit skill for certification. In all test modes except **unit** mode: **The owner of the vendor (account) should expect a certification submission email from Amazon and may receive a certification feedback on as well ;-)**
   - Withdraw skill from certification
 - Remove the test skill after all SMAPI testing is complete.
-- If a test run fails, you may need to **manually clean up the test skill** created during the failed test run. **This may include withdrawing it from certification.**
+- In all test modes except **unit** mode: if a test run fails, you may need to **manually clean up the test skill** created during the failed test run. **This may include withdrawing it from certification.**
 
 # About the test skill created by this test suite
 By default the test skill created will have:
@@ -17,7 +23,7 @@ By default the test skill created will have:
 - These default values may be changed in the manifest files under test/data
 
 # node-alexa-smapi test suite requirements
-Please follow the steps below in order to successfully run this test suite:
+Please follow the steps below in order to successfully run this test suite (in all test modes except **unit** mode):
 - First obtain refreshToken, clientId, and clientSecret
   - Follow [these instructions](https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#util-command) to retrieve clientId and clientSecret.
   - Run `ask util generate-lwa-tokens` to generate a refreshToken (copy the value from refresh_token and use it to initialize refreshToken in the next step).
@@ -37,20 +43,21 @@ Sample `test/data/secrets.json`:
 ```
 
 # Travis CI build requirements
-Add the following environment variables to your Travis CI repository settings::
-- CLIENT_ID - clientId from your `test/data/secrets.json` within quotes to correctly bash-escape it.
-- CLIENT_SECRET - clientSecret from your `test/data/secrets.json`.
-- REFRESH_TOKEN - refreshToken from your `test/data/secrets.json` within quotes to correctly bash-escape it.
+It is recommended to run the test suite in **unit** mode during Travis CI builds. No additional configuration is needed, as **unit** mode is the default test mode.
 
 # Test configuration options
-Due to the asynchronous nature of this test suite, you may need to adjust one of the following configuration parameters so the test suite complete successfully.
+Due to the asynchronous nature of the `integration`, `certification`, and `capture` test modes, you may need to adjust one of the following configuration parameters so the test suite will complete successfully.
 
 ```javascript
+const TEST_TYPE = ['unit', 'integration', 'certification', 'capture'].includes(process.env.TEST_TYPE) ? process.env.TEST_TYPE : 'unit';
+// TEST_TYPE = 'unit' will run unit tests locally (completes in milliseconds). This is the default value.
+// TEST_TYPE = 'integration' will run non-certification integration tests against SMAPI (completes in around 3 minutes).
+// TEST_TYPE = 'certification' same as integration plus will run the Skill Certification test cases (completes in around 20 minutes).
+// TEST_TYPE = 'capture' same as certification plus will capture the responses.
 const LOG_RESPONSES = false; // if true will output (console.log) the response received by each SMAPI operation
 const LOG_ERRORS = true; // if true will output (console.log) any unexpected response received from SMAPI
-const MAX_RETRIES = 10; // number of times the test suite will check for completion of create/update operations before proceeding with other test cases
-const RETRY_TIMEOUT = 10000; // time (in milliseconds) to wait before checking again for completion of create/update operations
-const WITHDRAWAL_TIMEOUT = 1 * 60 * 1000; // time (in milliseconds) to wait before withdrawing skill from certification
+const MAX_RETRIES = shouldMock(TEST_TYPE) ? 0 : 10; // number of times the test suite will check for completion of create/update operations before proceeding with other test cases
+const RETRY_TIMEOUT = shouldMock(TEST_TYPE) ? 0 : 10000; // time (in milliseconds) to wait before checking again for completion of create/update operations
+const WITHDRAWAL_TIMEOUT = shouldMock(TEST_TYPE) ? 0 : 1 * 60 * 1000; // time (in milliseconds) to wait before withdrawing skill from certification
 const MOCHA_TIMEOUT = WITHDRAWAL_TIMEOUT + 10000; // for details see https://mochajs.org/#timeouts
-const TEST_CERTIFICATION = true; // if true will run the Skill Certification test cases (adds a tens of minutes to this test run)
 ```

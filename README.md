@@ -14,14 +14,15 @@ As of now, the following SMAPI operations in this module are **untested**: skill
 * [Documentation](#documentation)
   * [Constructor](#constructor)
   * [Constants](#constants)
-	* [Access Tokens](#access-tokens)
+  * [Access Tokens](#access-tokens)
   * [Skill Operations](#skill-operations)
   * [Interaction Model Operations](#interaction-model-operations)
   * [Account Linking Operations](#account-linking-operations)
   * [Vendor Operations](#vendor-operations)
-	* [Skill Enablement Operations](#skill-enablement-operations)
+  * [Skill Enablement Operations](#skill-enablement-operations)
   * [Skill Certification Operations](#skill-certification-operations)
   * [Skill Testing Operations](#skill-testing-operations)
+  * [Intent Request History Operations](#intent-request-history-operations)
   * [Miscellaneous Functions](#miscellaneous-functions)
   * [Custom API calls](#custom-api-calls)
 * [Examples](#examples)
@@ -183,6 +184,60 @@ Object alexaSmapi.skillTesting.simulate(String skillId, String content, String l
 
 // Retrieves the status of the simulated skill execution.
 Object alexaSmapi.skillTesting.simulationStatus(String skillId, String requestId)
+```
+
+### Intent Request History Operations
+Official Documentation: https://developer.amazon.com/docs/smapi/intent-request-history.html
+
+```javascript
+// Provides aggregated and anonymized transcriptions of user speech data and intent request details for their skills, on a per-skill basis.
+// A skill must have at least 10 unique users per locale in a day, in order for data to be available for that locale for that day.
+// Here is the format for params (only the skillId is required all others are optional):
+// * skillId - The skillId for which utterance data is returned.
+// * nextToken (default: null) - Use nextToken along with the maxResults parameter to specify how many results should be loaded in the page.
+// * maxResults (default: 10) - Maximum number of result items (at-most and not at-least) that will be returned in the response.
+// * sortDirection (dafault: desc) - Valid values: asc (for ascending) or desc (for descending).
+// * sortField - Valid values: dialogAct.name, locale, intent.confidence.bin, stage, publicationStatus, intent.name, interactionType, or utteranceText.
+// * dialogAct.name (default: null) - Valid values: Dialog.ElicitSlot, Dialog.ConfirmSlot, or Dialog.ConfirmIntent.
+// * locale (default: null) - Valid values: All currently supported locales. Example: en-US. This filter can have multiple values and is not case-sensitive.
+// * intent.confidence.bin (default: null) - Valid values: HIGH, MEDIUM, OR LOW. This filter can have multiple values and is not case-sensitive.
+// * stage (default: null) - Valid values: live or development. This filter can have multiple values and is not case-sensitive.
+// * publicationStatus (default: null) - Valid values: certification or development. This filter can have multiple values and is not case-sensitive.
+// * utteranceText (default: null) - Valid values: Any string. This filter can have multiple values and is not case-sensitive.
+// * intent.name (default: null) - Valid values: Any string without white spaces. This filter can have multiple values and is not case-sensitive.
+// * intent.slot.name (default: null) - Valid values: Any string without white spaces. This filter can have multiple values and is not case-sensitive.
+// * interactionType (default: null) - This filter can have multiple values. Valid values:
+//   * ONE_SHOT: The user invokes the skill and states their intent in a single phrase.
+//   * MODAL: The user first invokes the skill and then states their intent.
+alexaSmapi.intentRequests.list(Object params)
+```
+Sample params:
+```javascript
+const params = {
+  skillId: 'MY_SKILL_ID',
+  maxResults: 10,
+  sortDirection: 'desc',
+  sortField: 'intent.confidence.bin',
+  locale: 'en-US',
+  locale: 'en-CA',
+  locale: 'en-GB',
+  locale: 'en-AU',
+  locale: 'en-IN',
+  'intent.confidence.bin': 'high',
+  'intent.confidence.bin': 'medium',
+  'intent.confidence.bin': 'low',
+  stage: 'live',
+  stage: 'development',
+  publicationStatus: 'certification',
+  publicationStatus: 'development',
+  utteranceText: 'api',
+  utteranceText: 'a pie',
+  utteranceText: 'ape',
+  'intent.name': 'testIntent',
+  'intent.name': 'AMAZON.HelpIntent',
+  interactionType: 'ONE_SHOT',
+  interactionType: 'MODAL'
+};
 ```
 
 ### Miscellaneous Functions
